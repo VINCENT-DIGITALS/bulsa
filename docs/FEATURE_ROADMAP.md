@@ -1,10 +1,15 @@
 # BULSA Feature Roadmap
 
-This is the delivery order and continuation log. Finish and verify a phase before starting the next one.
+This is the delivery order and continuation log. Finish and verify a phase before starting the next one. The publish-ready definition is in [Release Readiness](RELEASE_READINESS.md); phase completion is not accepted unless its applicable release-gate evidence also exists.
+
+## Launch plan
+
+- **BULSA v1.0 Free Release:** Phases 0–5 plus every v1.0 release gate. It is the first publishable goal.
+- **BULSA v1.1 Supporter Release:** Phase 3.5 and Phase 7 after v1.0 stability. It adds optional cloud sync and priority support only.
 
 ## Current status
 
-**Active phase: Phase 0 — Foundation.** The Flutter app shell and shared theme tokens are in place; gameplay implementation has not started yet.
+**Active phase: Phase 0 — Foundation.** The Flutter app shell, Android/Firebase Core configuration, and shared theme tokens are in place; gameplay implementation has not started yet.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -18,9 +23,9 @@ Goal: create a stable Flutter app shell and shared design system.
 - [x] Create navigation placeholders: Today, Calendar, Ledger, Profile.
 - [ ] Verify the interface on a small mobile viewport.
 
-**Next exact task:** Add shared typography and reusable page/button/card components, then verify the shell on an Android emulator.
+**Next exact task:** Add shared typography and reusable page/button/card components, then verify the shell on an Android emulator at normal and 1.3 font scale.
 
-**Exit condition:** A polished static shell exists with no arbitrary colors or radii.
+**Exit condition:** A polished static shell exists with no arbitrary colors/radii, and Release Gate C visual/accessibility checks have evidence.
 
 ## Phase 1 — First playable daily decision
 
@@ -32,7 +37,7 @@ Goal: prove the core choice loop in a short hard-coded run.
 - [ ] Add a ledger entry for every money change.
 - [ ] Show a simple completed-run result.
 
-**Exit condition:** A player can complete a 7-day run in under five minutes and understands why cash changed.
+**Exit condition:** A player can complete a 7-day run in under five minutes, understands why cash changed, and Gate A/B persistence/ledger checks pass.
 
 ## Phase 2 — Calendar and pay cycles
 
@@ -45,7 +50,7 @@ Goal: make the game reflect real-world cutoff patterns.
 - [ ] Show payday status: Expected, Early, Late, Received, Pending.
 - [ ] Support confirmed salary and recurring allowance.
 
-**Exit condition:** A 15th/month-end pay cycle works correctly across month boundaries.
+**Exit condition:** A 15th/month-end pay cycle works correctly across month boundaries, with Gate B calendar tests for February and weekend policies.
 
 ## Phase 3 — Profiles and variable income
 
@@ -71,7 +76,7 @@ Goal: protect player progress without blocking offline play.
 - [ ] Add local notifications for bills and paydays; defer FCM campaigns until a secure sending environment exists.
 - [ ] Add account deletion before public release.
 
-**Exit condition:** A player can opt in, back up their game, restore it safely, and still play offline without an account.
+**Exit condition:** A player can opt in, back up their game, restore it safely, and still play offline without an account. This is a v1.1 Supporter gate, not a v1.0 blocker.
 
 ## Phase 4 — Game depth and balance
 
@@ -83,7 +88,7 @@ Goal: make replaying interesting and fair.
 - [ ] Tune win/lose scoring and a month/pay-cycle result screen.
 - [ ] Add one financial lesson per completed run.
 
-**Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses.
+**Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses, and Gate D external-player validation passes.
 
 ## Phase 5 — Flame presentation
 
@@ -94,9 +99,9 @@ Goal: add game feel without changing core rules.
 - [ ] Respect reduced-motion settings.
 - [ ] Keep all decision UI accessible Flutter widgets.
 
-**Exit condition:** Animation reinforces player feedback and never hides important information.
+**Exit condition:** Animation reinforces player feedback, never hides important information, and respects Gate C reduced-motion requirements.
 
-## Phase 6 — Post-MVP progression
+## Phase 6 — Post-v1.0 progression
 
 Goal: add long-term motivation only after the core loop is proven.
 
@@ -118,4 +123,4 @@ Goal: fund cloud sync and support without paywalling the game.
 - [ ] Build a secure backend for Play purchase verification, entitlement status, cancellation, refunds, and restoration.
 - [ ] Keep all local game features/data free when the subscription expires.
 
-**Exit condition:** A player can voluntarily subscribe through Google Play, restore a purchase, use cloud sync and priority support while active, and continue playing locally after cancellation.
+**Exit condition:** A player can voluntarily subscribe through Google Play, restore a purchase, use cloud sync and priority support while active, and continue playing locally after cancellation. This must meet every v1.1 Supporter release gate.

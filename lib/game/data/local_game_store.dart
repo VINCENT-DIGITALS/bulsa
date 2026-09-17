@@ -39,6 +39,29 @@ class LocalGameStore {
         value TEXT NOT NULL
       )
     ''');
+    await _ensureGameRunColumn('start_date', 'TEXT');
+    await _ensureGameRunColumn('payday_date', 'TEXT');
+    await _ensureGameRunColumn(
+      'confirmed_salary',
+      'INTEGER NOT NULL DEFAULT 0',
+    );
+    await _ensureGameRunColumn(
+      'recurring_allowance',
+      'INTEGER NOT NULL DEFAULT 0',
+    );
+  }
+
+  Future<void> _ensureGameRunColumn(String name, String definition) async {
+    final columns = await _database.runSelect(
+      'PRAGMA table_info(game_runs)',
+      const [],
+    );
+    final exists = columns.any((column) => column['name'] == name);
+    if (!exists) {
+      await _database.runCustom(
+        'ALTER TABLE game_runs ADD COLUMN $name $definition',
+      );
+    }
   }
 
   Future<WeekendPaydayPolicy> loadWeekendPaydayPolicy() async {
@@ -75,18 +98,67 @@ class LocalGameStore {
     );
   }
 
-  Future<GameRun> loadOrCreateDemoRun() async {
+  Future<int> loadConfirmedSalary() => _loadAmountSetting('confirmed_salary');
+
+  Future<void> saveConfirmedSalary(int amount) =>
+      _saveAmountSetting('confirmed_salary', amount);
+
+  Future<int> loadRecurringAllowance() =>
+      _loadAmountSetting('recurring_allowance');
+
+  Future<void> saveRecurringAllowance(int amount) =>
+      _saveAmountSetting('recurring_allowance', amount);
+
+  Future<int> _loadAmountSetting(String key) async {
+    final rows = await _database.runSelect(
+      'SELECT value FROM app_settings WHERE key = ?',
+      [key],
+    );
+    return rows.isEmpty ? 0 : int.parse(rows.single['value']! as String);
+  }
+
+  Future<void> _saveAmountSetting(String key, int amount) {
+    if (amount < 0) {
+      throw ArgumentError.value(amount, 'amount', 'must not be negative');
+    }
+    return _database.runCustom(
+      'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
+      [key, '$amount'],
+    );
+  }
+
+  Future<GameRun> loadOrCreatePayCycleRun() async {
     final existing = await _loadRun();
     if (existing != null) {
       return existing;
     }
 
+    final startDate = await loadRunStartDate();
+    final schedule = PaySchedule(
+      rules: const [PaydayRule.fifteenth, PaydayRule.monthEnd],
+      weekendPolicy: await loadWeekendPaydayPolicy(),
+    );
+    final payday = schedule.nextPaydayAfter(startDate).payDate;
+    final totalDays = payday.difference(startDate).inDays + 1;
+    final salary = await loadConfirmedSalary();
+    final allowance = await loadRecurringAllowance();
     await _database.runInsert(
-      'INSERT INTO game_runs (id, current_day, total_days, cash, savings, completed) VALUES (1, 1, 7, 5000, 0, 0)',
-      const [],
+      '''INSERT INTO game_runs
+        (id, current_day, total_days, start_date, payday_date, cash, savings,
+         confirmed_salary, recurring_allowance, completed)
+        VALUES (1, 1, ?, ?, ?, 5000, 0, ?, ?, 0)''',
+      [
+        totalDays,
+        startDate.toIso8601String(),
+        payday.toIso8601String(),
+        salary,
+        allowance,
+      ],
     );
     return _loadRunOrThrow();
   }
+
+  Future<GameRun?> loadPayCycleRun() => _loadRun();
 
   Future<GameRun> applyChoice(GameChoice choice) async {
     final run = await _loadRunOrThrow();
@@ -94,17 +166,44 @@ class LocalGameStore {
       throw StateError('This pay cycle is already complete.');
     }
 
-    await _database.runInsert(
-      'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
-      [run.currentDay, choice.amount, choice.category, choice.description],
-    );
-
     final nextDay = run.currentDay + 1;
     final completed = nextDay > run.totalDays;
-    await _database.runUpdate(
-      'UPDATE game_runs SET cash = ?, current_day = ?, completed = ? WHERE id = 1',
-      [run.cash + choice.amount, nextDay, completed ? 1 : 0],
-    );
+    final paydayIncome = completed
+        ? run.confirmedSalary + run.recurringAllowance
+        : 0;
+    final transaction = _database.beginTransaction();
+    try {
+      await transaction.ensureOpen(const _StoreExecutorUser());
+      await transaction.runInsert(
+        'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
+        [run.currentDay, choice.amount, choice.category, choice.description],
+      );
+      if (completed && run.confirmedSalary > 0) {
+        await transaction.runInsert(
+          'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
+          [run.currentDay, run.confirmedSalary, 'Income', 'Confirmed salary'],
+        );
+      }
+      if (completed && run.recurringAllowance > 0) {
+        await transaction.runInsert(
+          'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
+          [
+            run.currentDay,
+            run.recurringAllowance,
+            'Income',
+            'Recurring allowance',
+          ],
+        );
+      }
+      await transaction.runUpdate(
+        'UPDATE game_runs SET cash = ?, current_day = ?, completed = ? WHERE id = 1',
+        [run.cash + choice.amount + paydayIncome, nextDay, completed ? 1 : 0],
+      );
+      await transaction.send();
+    } catch (_) {
+      await transaction.rollback();
+      rethrow;
+    }
     return _loadRunOrThrow();
   }
 
@@ -125,7 +224,7 @@ class LocalGameStore {
         .toList();
   }
 
-  Future<void> resetDemoRun() async {
+  Future<void> resetPayCycleRun() async {
     await _database.runDelete('DELETE FROM ledger_entries', const []);
     await _database.runDelete('DELETE FROM game_runs', const []);
   }
@@ -139,11 +238,23 @@ class LocalGameStore {
       return null;
     }
     final row = rows.single;
+    final startDate = row['start_date'] as String?;
+    final paydayDate = row['payday_date'] as String?;
+    final totalDays = row['total_days']! as int;
+    final fallbackStartDate = DateTime.now();
     return GameRun(
       currentDay: row['current_day']! as int,
-      totalDays: row['total_days']! as int,
+      totalDays: totalDays,
+      startDate: startDate == null
+          ? fallbackStartDate
+          : DateTime.parse(startDate),
+      paydayDate: paydayDate == null
+          ? fallbackStartDate.add(Duration(days: totalDays - 1))
+          : DateTime.parse(paydayDate),
       cash: row['cash']! as int,
       savings: row['savings']! as int,
+      confirmedSalary: row['confirmed_salary']! as int,
+      recurringAllowance: row['recurring_allowance']! as int,
       completed: (row['completed']! as int) == 1,
     );
   }

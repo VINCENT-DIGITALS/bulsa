@@ -112,6 +112,26 @@ ThemeData buildBulsaTheme() {
         ),
       ),
     ),
+    dialogTheme: const DialogThemeData(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(BulsaRadii.modal),
+      ),
+    ),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(BulsaRadii.control),
+        borderSide: BorderSide(color: BulsaColors.lightGray),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(BulsaRadii.control),
+        borderSide: BorderSide(color: BulsaColors.lightGray),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(BulsaRadii.control),
+        borderSide: BorderSide(color: BulsaColors.primary, width: 2),
+      ),
+    ),
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: BulsaColors.background,
       indicatorColor: BulsaColors.primary,

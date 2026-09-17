@@ -21,7 +21,7 @@ class _TodayPageState extends State<TodayPage> {
   @override
   void initState() {
     super.initState();
-    _runFuture = widget.store.loadOrCreateDemoRun();
+    _runFuture = widget.store.loadOrCreatePayCycleRun();
   }
 
   Future<void> _selectChoice(GameChoice choice) async {
@@ -32,9 +32,9 @@ class _TodayPageState extends State<TodayPage> {
   }
 
   Future<void> _restart() async {
-    await widget.store.resetDemoRun();
+    await widget.store.resetPayCycleRun();
     setState(() {
-      _runFuture = widget.store.loadOrCreateDemoRun();
+      _runFuture = widget.store.loadOrCreatePayCycleRun();
     });
   }
 
@@ -91,24 +91,29 @@ class _RunView extends StatelessWidget {
             icon: Icons.celebration_outlined,
             title: 'You reached payday',
             message:
-                'Ending cash: ${_peso(run.cash)}. Review your ledger, then try another run.',
+                'Ending cash: ${_peso(run.cash)}. Review your ledger, then try another pay cycle.',
           ),
           const SizedBox(height: BulsaSpacing.large),
           BulsaPrimaryButton(
-            label: 'Start a new 7-day run',
+            label: 'Start a new pay cycle',
             onPressed: onRestart,
           ),
         ],
       );
     }
 
-    final event = demoScenario[run.currentDay - 1];
+    final event = demoScenario[(run.currentDay - 1) % demoScenario.length];
     return BulsaPage(
       title: 'Today',
       children: [
         Text(
           'DAY ${run.currentDay} · ${run.daysRemaining} DAYS TO PAYDAY',
           style: Theme.of(context).textTheme.labelSmall,
+        ),
+        const SizedBox(height: BulsaSpacing.xSmall),
+        Text(
+          'Today: ${_shortDate(run.currentDate)} · Payday: ${_shortDate(run.paydayDate)}',
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: BulsaSpacing.medium),
         _MoneySummary(run: run),
@@ -220,3 +225,5 @@ String _peso(int amount) {
   );
   return '${amount < 0 ? '−' : ''}₱$formatted';
 }
+
+String _shortDate(DateTime date) => '${date.month}/${date.day}/${date.year}';

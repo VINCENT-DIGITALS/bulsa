@@ -2,6 +2,7 @@ import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
 import 'package:bulsa/game/rules/event_selector.dart';
 import 'package:bulsa/game/rules/fixed_bills.dart';
+import 'package:bulsa/game/rules/pay_cycle_result.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
@@ -162,6 +163,7 @@ class _RunView extends StatelessWidget {
       );
     }
     if (run.completed) {
+      final result = resultForRun(run);
       return BulsaPage(
         title: 'Pay cycle complete',
         children: [
@@ -169,9 +171,14 @@ class _RunView extends StatelessWidget {
           const SizedBox(height: BulsaSpacing.xLarge),
           BulsaInfoCard(
             icon: Icons.celebration_outlined,
-            title: 'You reached payday',
-            message:
-                'Ending cash: ${_peso(run.cash)}. Review your ledger, then try another pay cycle.',
+            title: result.title,
+            message: '${result.message} Score: ${result.score}.',
+          ),
+          const SizedBox(height: BulsaSpacing.medium),
+          BulsaInfoCard(
+            icon: Icons.lightbulb_outline,
+            title: 'Lesson for next cycle',
+            message: result.lesson,
           ),
           const SizedBox(height: BulsaSpacing.large),
           BulsaPrimaryButton(

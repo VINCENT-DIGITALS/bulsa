@@ -49,6 +49,74 @@ Use an 8-point spacing rhythm: `4, 8, 12, 16, 24, 32`.
 - Minimum touch target: `48 × 48` logical pixels.
 - Buttons should normally fill the available width on mobile decision screens.
 
+### Semantic spacing tokens
+
+The numeric scale stays small and deliberate. Use the semantic names in the
+Flutter theme rather than choosing values per screen.
+
+| Use | Token | Value |
+| --- | --- | --- |
+| Screen sides | `screenHorizontal` | `16` |
+| Screen top | `screenTop` | `24` |
+| Screen bottom | `screenBottom` | `32` |
+| Header to first content section | `headerToContent` | `24` |
+| Between independent sections | `section` | `24` |
+| Standard card content | `card` | `16` |
+| Prominent event/result card content | `prominentCard` | `24` |
+| Adjacent actions | `actionGap` | `8` |
+
+### Page hierarchy
+
+Every main tab starts with the same vertical header: a 48 × 48 outlined icon
+tile, screen title, then one short description. Content begins 24 pixels below
+that header. Informational cards use an icon tile, title, and description in
+that order. This gives screens a predictable scanning path without making the
+app feel like a dense finance dashboard.
+
+### Action layout
+
+- One primary action occupies a full row.
+- Two related actions share one row with equal widths and an 8-pixel gap.
+- More than two actions must be split into separate rows or presented as
+  decision choices; never squeeze three actions into one row.
+- Use the shared `BulsaPrimaryButton`, `BulsaSecondaryButton`, and
+  `BulsaButtonRow` widgets. Buttons are 52 pixels high, exceeding the
+  48-pixel minimum touch target.
+
+### Semantic spacing tokens
+
+The numeric scale stays small and deliberate. Use the semantic names in the
+Flutter theme rather than choosing values per screen.
+
+| Use | Token | Value |
+| --- | --- | --- |
+| Screen sides | `screenHorizontal` | `16` |
+| Screen top | `screenTop` | `24` |
+| Screen bottom | `screenBottom` | `32` |
+| Header to first content section | `headerToContent` | `24` |
+| Between independent sections | `section` | `24` |
+| Standard card content | `card` | `16` |
+| Prominent event/result card content | `prominentCard` | `24` |
+| Adjacent actions | `actionGap` | `8` |
+
+### Page hierarchy
+
+Every main tab starts with the same vertical header: a 48 × 48 outlined icon
+tile, screen title, then one short description. Content begins 24 pixels below
+that header. Informational cards use an icon tile, title, and description in
+that order. This gives screens a predictable scanning path without making the
+app feel like a dense finance dashboard.
+
+### Action layout
+
+- One primary action occupies a full row.
+- Two related actions share one row with equal widths and an 8-pixel gap.
+- More than two actions must be split into separate rows or presented as
+  decision choices; never squeeze three actions into one row.
+- Use the shared `BulsaPrimaryButton`, `BulsaSecondaryButton`, and
+  `BulsaButtonRow` widgets. Buttons are 52 pixels high, exceeding the
+  48-pixel minimum touch target.
+
 ## Typography and hierarchy
 
 - Use one readable sans-serif family supplied by Flutter/Material until a brand typeface is deliberately selected.

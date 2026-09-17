@@ -98,6 +98,8 @@ class _TodayPageState extends State<TodayPage> {
         if (snapshot.hasError) {
           return BulsaPage(
             title: 'Today',
+            description: 'Your daily budgeting game is loading.',
+            icon: Icons.today_outlined,
             children: [
               BulsaInfoCard(
                 icon: Icons.error_outline,
@@ -145,9 +147,11 @@ class _RunView extends StatelessWidget {
     if (run.failed) {
       return BulsaPage(
         title: 'Pay cycle ended',
+        description: 'Review what happened, then begin again with a new plan.',
+        icon: Icons.warning_amber_outlined,
         children: [
           _MoneySummary(run: run),
-          const SizedBox(height: BulsaSpacing.xLarge),
+          const SizedBox(height: BulsaSpacing.section),
           BulsaInfoCard(
             icon: Icons.warning_amber_outlined,
             title: 'Debt limit reached',
@@ -166,9 +170,11 @@ class _RunView extends StatelessWidget {
       final result = resultForRun(run);
       return BulsaPage(
         title: 'Pay cycle complete',
+        description: 'Your result is based on the choices you made this cycle.',
+        icon: Icons.celebration_outlined,
         children: [
           _MoneySummary(run: run),
-          const SizedBox(height: BulsaSpacing.xLarge),
+          const SizedBox(height: BulsaSpacing.section),
           BulsaInfoCard(
             icon: Icons.celebration_outlined,
             title: result.title,
@@ -196,6 +202,9 @@ class _RunView extends StatelessWidget {
     );
     return BulsaPage(
       title: 'Today',
+      description:
+          'Make one clear choice at a time and keep your cycle on track.',
+      icon: Icons.today_outlined,
       children: [
         Text(
           'DAY ${run.currentDay} · ${run.daysRemaining} DAYS TO PAYDAY',
@@ -212,7 +221,7 @@ class _RunView extends StatelessWidget {
         _MoneyActions(run: run, onSave: onSave, onWithdraw: onWithdraw),
         const SizedBox(height: BulsaSpacing.medium),
         _NextBill(run: run),
-        const SizedBox(height: BulsaSpacing.xLarge),
+        const SizedBox(height: BulsaSpacing.section),
         _EventCard(event: event, onChoice: onChoice),
       ],
     );
@@ -231,20 +240,17 @@ class _MoneyActions extends StatelessWidget {
   final ValueChanged<int> onWithdraw;
 
   @override
-  Widget build(BuildContext context) => Row(
+  Widget build(BuildContext context) => BulsaButtonRow(
     children: [
-      Expanded(
-        child: OutlinedButton(
-          onPressed: run.cash >= 100 ? () => onSave(100) : null,
-          child: const Text('Save ₱100'),
-        ),
+      BulsaSecondaryButton(
+        label: 'Save ₱100',
+        icon: Icons.savings_outlined,
+        onPressed: run.cash >= 100 ? () => onSave(100) : null,
       ),
-      const SizedBox(width: BulsaSpacing.small),
-      Expanded(
-        child: OutlinedButton(
-          onPressed: run.savings >= 100 ? () => onWithdraw(100) : null,
-          child: const Text('Withdraw ₱100'),
-        ),
+      BulsaSecondaryButton(
+        label: 'Withdraw ₱100',
+        icon: Icons.account_balance_wallet_outlined,
+        onPressed: run.savings >= 100 ? () => onWithdraw(100) : null,
       ),
     ],
   );
@@ -335,7 +341,7 @@ class _EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(BulsaSpacing.xLarge),
+        padding: const EdgeInsets.all(BulsaSpacing.prominentCard),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

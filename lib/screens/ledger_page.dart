@@ -33,6 +33,9 @@ class _LedgerPageState extends State<LedgerPage> {
         final entries = snapshot.data!;
         return BulsaPage(
           title: 'Ledger',
+          description:
+              'Every in-game cash change is kept here for you to review.',
+          icon: Icons.receipt_long_outlined,
           children: entries.isEmpty
               ? const [
                   BulsaInfoCard(

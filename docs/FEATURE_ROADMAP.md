@@ -11,7 +11,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 **Active phase: Phase 4 — Game depth and balance.** Phase 3's local-only work profile and possible-income event rules are persisted and verified.
 
-**Next exact task:** Run the five-person external playtest in [External Playtest Protocol](EXTERNAL_PLAYTEST.md), triage launch-blocking findings, and retest fixes. Phase 5 cannot start until Gate D has evidence.
+**Next exact task:** Apply the owner playtest's UI consistency feedback, verify the shared screen/header/card/action system on device, then have the owner re-test the complete player journey. Phase 5 cannot start until Gate D has that evidence.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 

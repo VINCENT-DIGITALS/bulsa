@@ -1,8 +1,9 @@
-# BULSA External Playtest Protocol
+# BULSA Owner Playtest Protocol
 
-This protocol supplies the evidence required for Release Gate D. Five people
-who were not involved in implementation must complete it independently before
-the v1.0 release decision.
+This protocol supplies the evidence required for Release Gate D. The product
+owner chose owner-led validation in place of the former five-person external
+test requirement. A complete re-test is required after each launch-blocking
+usability fix.
 
 ## Build and setup
 
@@ -31,15 +32,12 @@ the v1.0 release decision.
 
 ## Evidence record
 
-Record each tester as `T1`–`T5`; do not store names or private details.
+Record only the findings needed to make the game clearer; do not store names
+or private details.
 
-| Tester | Completed run | Explained cash/bill/payday | Blocker found | Follow-up issue |
+| Test pass | Completed run | Explained cash/bill/payday | Blocker found | Follow-up issue |
 | --- | --- | --- | --- | --- |
-| T1 |  |  |  |  |
-| T2 |  |  |  |  |
-| T3 |  |  |  |  |
-| T4 |  |  |  |  |
-| T5 |  |  |  |  |
+| Owner feedback — UI pass | Not yet re-tested | Not yet re-tested | Visual hierarchy, icon, action-row, and spacing consistency | Implement shared UI system and re-test complete journey |
 
-Release Gate D remains open until all five playthroughs are complete and any
-launch-blocking issue is fixed and retested.
+Release Gate D remains open until the owner completes the post-fix journey and
+any launch-blocking issue is fixed and retested.

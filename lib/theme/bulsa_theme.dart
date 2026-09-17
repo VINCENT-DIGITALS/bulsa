@@ -21,6 +21,16 @@ abstract final class BulsaSpacing {
   static const large = 16.0;
   static const xLarge = 24.0;
   static const xxLarge = 32.0;
+
+  // Semantic aliases keep page, component, and section rhythm intentional.
+  static const screenHorizontal = large;
+  static const screenTop = xLarge;
+  static const screenBottom = xxLarge;
+  static const headerToContent = xLarge;
+  static const section = xLarge;
+  static const card = large;
+  static const prominentCard = xLarge;
+  static const actionGap = small;
 }
 
 ThemeData buildBulsaTheme() {
@@ -96,7 +106,9 @@ ThemeData buildBulsaTheme() {
       style: ElevatedButton.styleFrom(
         backgroundColor: BulsaColors.primary,
         foregroundColor: BulsaColors.black,
-        minimumSize: const Size.fromHeight(48),
+        minimumSize: const Size.fromHeight(52),
+        padding: const EdgeInsets.symmetric(horizontal: BulsaSpacing.large),
+        textStyle: const TextStyle(fontWeight: FontWeight.w700),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(BulsaRadii.control),
         ),
@@ -105,7 +117,9 @@ ThemeData buildBulsaTheme() {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: BulsaColors.black,
-        minimumSize: const Size.fromHeight(48),
+        minimumSize: const Size.fromHeight(52),
+        padding: const EdgeInsets.symmetric(horizontal: BulsaSpacing.large),
+        textStyle: const TextStyle(fontWeight: FontWeight.w700),
         side: const BorderSide(color: BulsaColors.lightGray),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(BulsaRadii.control),

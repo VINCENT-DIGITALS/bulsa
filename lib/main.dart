@@ -72,7 +72,6 @@ class _BulsaHomePageState extends State<BulsaHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('BULSA')),
       body: switch (_selectedIndex) {
         0 when widget.store != null => TodayPage(store: widget.store!),
         1 when widget.store != null => CalendarPage(store: widget.store!),
@@ -122,6 +121,8 @@ class _PlaceholderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BulsaPage(
       title: title,
+      description: message,
+      icon: icon,
       children: [
         BulsaInfoCard(icon: icon, title: 'Coming soon', message: message),
       ],

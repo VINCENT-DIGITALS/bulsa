@@ -85,6 +85,9 @@ class _ProfilePageState extends State<ProfilePage> {
         }
         return BulsaPage(
           title: 'Profile',
+          description:
+              'Optional local details make fictional events feel more relevant.',
+          icon: Icons.person_outline,
           children: [
             BulsaInfoCard(
               icon: _avatarIcon(_avatar),
@@ -215,9 +218,9 @@ class _Field extends StatelessWidget {
 }
 
 IconData _avatarIcon(ProfileAvatar avatar) => switch (avatar) {
-  ProfileAvatar.circle => Icons.face_outlined,
-  ProfileAvatar.square => Icons.sentiment_satisfied_outlined,
-  ProfileAvatar.triangle => Icons.mood_outlined,
+  ProfileAvatar.circle => Icons.circle_outlined,
+  ProfileAvatar.square => Icons.square_outlined,
+  ProfileAvatar.triangle => Icons.change_history_outlined,
 };
 
 String _avatarLabel(ProfileAvatar avatar) => switch (avatar) {

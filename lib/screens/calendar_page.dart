@@ -141,6 +141,8 @@ class _CalendarPageState extends State<CalendarPage> {
         final nextPayday = schedule.nextPaydayAfter(calendarDate);
         return BulsaPage(
           title: 'Calendar',
+          description: 'Set the schedule your next pay cycle will follow.',
+          icon: Icons.calendar_month_outlined,
           children: [
             Text(
               'YOUR PAY SCHEDULE',

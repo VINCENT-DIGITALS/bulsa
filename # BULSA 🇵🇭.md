@@ -5,6 +5,7 @@
 This file describes the product and gameplay. The following files are the rules for implementation:
 
 - [Design system](docs/DESIGN_SYSTEM.md) — mandatory colors, radii, spacing, and component behavior.
+- [App architecture](docs/APP_ARCHITECTURE.md) — UI/data boundaries and reusable component rules.
 - [Feature roadmap](docs/FEATURE_ROADMAP.md) — phased feature order and the current continuation point.
 - [Backend and authentication](docs/BACKEND_AND_AUTH.md) — storage, optional sign-in, cloud backup, and security decision.
 - [Monetization and support](docs/MONETIZATION_AND_SUPPORT.md) — free-core promise, Supporter subscription, and customer support design.

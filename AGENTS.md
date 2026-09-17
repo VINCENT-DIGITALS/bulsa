@@ -9,6 +9,7 @@ Read these files before changing the product:
 5. [Backend and authentication](docs/BACKEND_AND_AUTH.md) — offline-first storage, Firebase cloud sync/FCM, and security rules.
 6. [Monetization and support](docs/MONETIZATION_AND_SUPPORT.md) — free-core promise, Supporter entitlement, support, and billing rules.
 7. [Release readiness](docs/RELEASE_READINESS.md) — publishable v1.0/v1.1 goals and mandatory release gates.
+8. [Google Play submission handoff](docs/PLAY_STORE_SUBMISSION.md) — release-owner inputs and final store/policy review.
 
 ## Non-negotiable rules
 

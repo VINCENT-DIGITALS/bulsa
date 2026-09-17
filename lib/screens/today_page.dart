@@ -305,9 +305,10 @@ class _NextBill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final upcomingBills = fixedBills
-        .where((bill) => bill.day >= run.currentDay)
-        .toList();
+    final upcomingBills = upcomingBillsForCycle(
+      currentDay: run.currentDay,
+      totalDays: run.totalDays,
+    );
     final nextBill = upcomingBills.isEmpty ? null : upcomingBills.first;
     if (nextBill == null) {
       return const BulsaInfoCard(

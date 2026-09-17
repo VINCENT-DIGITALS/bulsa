@@ -9,7 +9,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 ## Current status
 
-**Active phase: Phase 1 — First playable daily decision.** Phase 0 foundation is complete and verified on the Android emulator at normal and 1.3 font scale; gameplay implementation is now beginning.
+**Active phase: Phase 2 — Calendar and pay cycles.** Phase 1's deterministic 7-day playable loop is complete, persisted locally, and verified on the Android emulator.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -31,19 +31,21 @@ Goal: create a stable Flutter app shell and shared design system.
 
 Goal: prove the core choice loop in a short hard-coded run.
 
-**Next exact task:** Add Drift/SQLite and the local game-state model, then create a deterministic 7-day scenario with one playable choice.
+- [x] Add Drift/SQLite game state: day, cash, savings, and ledger.
+- [x] Create one deterministic 7-day scenario.
+- [x] Show one event card with 2–3 choices and immediate money update.
+- [x] Add a visible ledger entry for every money change.
+- [x] Show a completed-run result and restart option.
 
-- [ ] Add Drift/SQLite game state: date, cash, savings, next bill, ledger, and app settings.
-- [ ] Create one 7-day scenario with fixed dates.
-- [ ] Show one event card with 2–3 choices and immediate money update.
-- [ ] Add a ledger entry for every money change.
-- [ ] Show a simple completed-run result.
+**Verification evidence:** Local-store unit tests cover creating/persisting a run, recording a choice, and completing Day 7. Android emulator verification showed Day 1 → Day 2 with cash changing from ₱5,000 to ₱4,880, retained after an app restart; the Ledger tab displayed the recorded −₱120 entry.
 
 **Exit condition:** A player can complete a 7-day run in under five minutes, understands why cash changed, and Gate A/B persistence/ledger checks pass.
 
 ## Phase 2 — Calendar and pay cycles
 
 Goal: make the game reflect real-world cutoff patterns.
+
+**Next exact task:** Create calendar/payday domain models and tests for month-end, February, and the 15th/month-end cutoff schedule before replacing the fixed 7-day dates in the UI.
 
 - [ ] Add selectable run start date.
 - [ ] Support payday on a day number and on the last calendar day of a month.

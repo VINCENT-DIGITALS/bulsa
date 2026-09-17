@@ -1,3 +1,6 @@
+import 'package:bulsa/game/data/local_game_store.dart';
+import 'package:bulsa/screens/ledger_page.dart';
+import 'package:bulsa/screens/today_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,11 +11,15 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const BulsaApp());
+  final store = LocalGameStore.open();
+  await store.initialize();
+  runApp(BulsaApp(store: store));
 }
 
 class BulsaApp extends StatelessWidget {
-  const BulsaApp({super.key});
+  const BulsaApp({super.key, this.store});
+
+  final LocalGameStore? store;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +27,15 @@ class BulsaApp extends StatelessWidget {
       title: 'BULSA',
       debugShowCheckedModeBanner: false,
       theme: buildBulsaTheme(),
-      home: const BulsaHomePage(),
+      home: BulsaHomePage(store: store),
     );
   }
 }
 
 class BulsaHomePage extends StatefulWidget {
-  const BulsaHomePage({super.key});
+  const BulsaHomePage({super.key, this.store});
+
+  final LocalGameStore? store;
 
   @override
   State<BulsaHomePage> createState() => _BulsaHomePageState();
@@ -35,7 +44,7 @@ class BulsaHomePage extends StatefulWidget {
 class _BulsaHomePageState extends State<BulsaHomePage> {
   int _selectedIndex = 0;
 
-  static const _pages = [
+  static const _placeholderPages = [
     _PlaceholderPage(
       title: 'Today',
       message: 'Your next payday game will begin here.',
@@ -62,7 +71,11 @@ class _BulsaHomePageState extends State<BulsaHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('BULSA')),
-      body: SafeArea(child: _pages[_selectedIndex]),
+      body: switch (_selectedIndex) {
+        0 when widget.store != null => TodayPage(store: widget.store!),
+        2 when widget.store != null => LedgerPage(store: widget.store!),
+        _ => SafeArea(child: _placeholderPages[_selectedIndex]),
+      },
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) =>

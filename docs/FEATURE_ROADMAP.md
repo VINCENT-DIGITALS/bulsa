@@ -26,7 +26,7 @@ Goal: create a stable Flutter app shell and shared design system.
 
 Goal: prove the core choice loop in a short hard-coded run.
 
-- [ ] Add game state: date, cash, savings, next bill, ledger.
+- [ ] Add Drift/SQLite game state: date, cash, savings, next bill, ledger, and app settings.
 - [ ] Create one 7-day scenario with fixed dates.
 - [ ] Show one event card with 2–3 choices and immediate money update.
 - [ ] Add a ledger entry for every money change.
@@ -57,6 +57,21 @@ Goal: personalize scenarios without requiring sensitive data.
 - [ ] Add profile-driven event weighting, such as remote work or commuter events.
 
 **Exit condition:** A player can set up an app-developer profile and encounter a non-guaranteed project incentive.
+
+## Phase 3.5 — Optional cloud backup, account linking, and notifications
+
+Goal: protect player progress without blocking offline play.
+
+- [ ] Complete and test local Drift/SQLite persistence first.
+- [ ] Create a Firebase project only when the local game loop is stable.
+- [ ] Configure Firebase Authentication, Cloud Firestore, and tested user-owned Security Rules.
+- [ ] Create `users/{uid}` documents with pay schedules, game runs, ledger, and choices as subcollections.
+- [ ] Add optional Google Sign-In on Android and link local profile data to the account.
+- [ ] Add offline-first sync and clear conflict handling.
+- [ ] Add local notifications for bills and paydays; defer FCM campaigns until a secure sending environment exists.
+- [ ] Add account deletion before public release.
+
+**Exit condition:** A player can opt in, back up their game, restore it safely, and still play offline without an account.
 
 ## Phase 4 — Game depth and balance
 

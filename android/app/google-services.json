@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "274883154796",
+    "project_id": "bulsa-9b3c6",
+    "storage_bucket": "bulsa-9b3c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:274883154796:android:ffb623cfa9de442d90d949",
+        "android_client_info": {
+          "package_name": "com.bulsa.bulsa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjyLDx78lfh5USNxokDRTOO7SsuZuaGBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

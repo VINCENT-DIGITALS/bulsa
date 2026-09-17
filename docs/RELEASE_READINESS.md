@@ -61,7 +61,7 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 - [ ] At least five external testers complete a full run without developer help.
 - [ ] Testers can explain why their cash changed and what the next payday/bill means.
 - [ ] Feedback is triaged; launch-blocking usability issues are fixed.
-- [ ] The starting scenario has been tuned so survival is possible through sound choices and losses are understandable.
+- [ ] The starting scenario has been tuned so survival is possible through sound choices and losses are understandable. Automated balance coverage proves a deterministic sound-choice route can complete a configured cycle and reconcile its cash with the ledger; external player evidence is still required.
 
 ### Gate E — Google Play release package
 

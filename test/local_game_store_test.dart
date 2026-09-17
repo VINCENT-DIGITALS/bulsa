@@ -1,4 +1,5 @@
 import 'package:bulsa/game/data/local_game_store.dart';
+import 'package:bulsa/game/rules/event_selector.dart';
 import 'package:bulsa/game/models/game_models.dart';
 import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:drift/drift.dart';
@@ -186,4 +187,35 @@ void main() {
     expect(updated.failed, isTrue);
     expect(updated.isClosed, isTrue);
   });
+
+  test(
+    'a sound choice route can survive a full cycle and reconcile with its ledger',
+    () async {
+      await store.saveRunStartDate(DateTime(2026, 9, 1));
+      final run = await store.loadOrCreatePayCycleRun();
+      GameRun updated = run;
+
+      while (!updated.isClosed) {
+        final event = eventForProfileDay(
+          day: updated.currentDay,
+          profile: const PlayerProfile.empty(),
+          seed: updated.eventSeed,
+        );
+        final soundChoice = event.choices.reduce(
+          (best, choice) => choice.amount > best.amount ? choice : best,
+        );
+        updated = await store.applyChoice(soundChoice);
+      }
+
+      final ledger = await store.loadLedger();
+      final ledgerTotal = ledger.fold<int>(
+        0,
+        (total, entry) => total + entry.amount,
+      );
+      expect(updated.completed, isTrue);
+      expect(updated.failed, isFalse);
+      expect(updated.cash, greaterThanOrEqualTo(0));
+      expect(updated.cash - run.cash, ledgerTotal);
+    },
+  );
 }

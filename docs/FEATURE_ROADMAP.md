@@ -98,7 +98,7 @@ Goal: make replaying interesting and fair.
 - [x] Tune win/lose scoring and a month/pay-cycle result screen.
 - [x] Add one financial lesson per completed run.
 
-**Verification evidence:** The deterministic pack contains ten event cards. Unit tests cover fixed-bill charges, savings movement, debt-limit failure, outcome scoring, and seeded event sequences. `flutter analyze`, 21 tests, and Android debug APK builds passed; Android emulator checks verified the bill/savings layout and withdrawal safeguard.
+**Verification evidence:** The deterministic pack contains ten event cards. Unit tests cover fixed-bill charges, savings movement, debt-limit failure, outcome scoring, seeded event sequences, and a full sound-choice route that survives a configured cycle while cash reconciles exactly with ledger entries. Android emulator checks verified the bill/savings layout and withdrawal safeguard. Run the full verification suite again after this milestone before treating the evidence as current.
 
 **Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses, and Gate D external-player validation passes.
 

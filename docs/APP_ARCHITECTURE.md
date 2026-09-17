@@ -16,6 +16,7 @@ lib/
 ├── screens/                   # Feature views: Today, Calendar, Ledger, Profile
 └── game/
     ├── models/                # Immutable game domain data
+    ├── presentation/          # Optional, touch-transparent Flame effects
     ├── rules/                 # Pure, testable calendar/event/result rules
     └── data/                  # Drift/SQLite persistence and scenario data
 ```
@@ -32,6 +33,9 @@ lib/
   used.
 - **Theme and widgets** are the only place to define shared presentation
   tokens, cards, page headers, and button layouts.
+- **Flame presentation** is decorative only. It reads an already-derived UI
+  state, respects reduced motion, uses shared color tokens, and never owns
+  choices, forms, dialogs, money, or accessibility-critical text.
 
 ## Next evolution, only when complexity needs it
 

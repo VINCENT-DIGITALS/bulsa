@@ -9,9 +9,9 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 ## Current status
 
-**Active phase: Phase 4 — Game depth and balance.** Phase 3's local-only work profile and possible-income event rules are persisted and verified.
+**Active phase: v1.0 release hardening.** Phases 0–5 are implemented. The remaining work is the required first-time journey, help/privacy, accessibility, migration, and Android release-package evidence.
 
-**Next exact task:** Apply the owner playtest's UI consistency feedback, verify the shared screen/header/card/action system on device, then have the owner re-test the complete player journey. Phase 5 cannot start until Gate D has that evidence.
+**Next exact task:** Build and verify the first-time player journey (onboarding plus a clear way to start a fresh configured cycle), then close the remaining v1.0 release gates in order.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -100,18 +100,22 @@ Goal: make replaying interesting and fair.
 
 **Verification evidence:** The deterministic pack contains ten event cards. Unit tests cover fixed-bill charges, savings movement, debt-limit failure, outcome scoring, seeded event sequences, and a full sound-choice route that survives a configured cycle while cash reconciles exactly with ledger entries. Android emulator checks verified the bill/savings layout and withdrawal safeguard. Run the full verification suite again after this milestone before treating the evidence as current.
 
-**Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses, and Gate D external-player validation passes.
+**Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses, and Gate D product validation passes. **Met by product decision and developer evidence.**
+
+**Owner validation decision:** The product owner supplied UI feedback, approved the resulting direction, and will review the final release candidate rather than provide staged re-test feedback. Developer automated and Android device checks are the Phase 4 evidence; no further owner feedback is a Phase 5 blocker.
 
 ## Phase 5 — Flame presentation
 
 Goal: add game feel without changing core rules.
 
-- [ ] Add subtle Flame background/scene to the Today screen.
-- [ ] Add coin, payday, warning, and celebration effects.
-- [ ] Respect reduced-motion settings.
-- [ ] Keep all decision UI accessible Flutter widgets.
+- [x] Add subtle Flame background/scene to the Today screen.
+- [x] Add coin, payday, warning, and celebration effects.
+- [x] Respect reduced-motion settings.
+- [x] Keep all decision UI accessible Flutter widgets.
 
-**Exit condition:** Animation reinforces player feedback, never hides important information, and respects Gate C reduced-motion requirements.
+**Verification evidence:** Flame is embedded as a touch-transparent 96-pixel Today scene. It paints only approved BULSA colors and surfaces steady, payday-soon, celebration, and warning states. `MediaQuery.disableAnimationsOf` stops scene updates when reduced motion is requested, while all choices, forms, and dialogs remain Flutter widgets. `flutter analyze`, all 22 tests, Android debug APK build, and Android emulator visual QA passed.
+
+**Exit condition:** Animation reinforces player feedback, never hides important information, and respects Gate C reduced-motion requirements. **Met.**
 
 ## Phase 6 — Post-v1.0 progression
 

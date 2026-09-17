@@ -37,6 +37,7 @@ dependencies:
   firebase_core: ^4.15.0
   drift: ^2.35.0
   drift_flutter: ^0.3.1
+  flame: ^1.35.1
 
 dev_dependencies:
   flutter_test:

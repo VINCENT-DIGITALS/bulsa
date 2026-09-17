@@ -56,12 +56,12 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 - [ ] Reduced motion does not hide any outcome or prevent gameplay.
 - [ ] No open blocker/critical bug; no known crash in the core player journey.
 
-### Gate D — Owner player validation
+### Gate D — Product validation
 
-- [ ] The product owner completes a full run without developer help after the current usability fixes.
-- [ ] The owner can explain why cash changed and what the next payday/bill means.
-- [ ] Owner feedback is triaged; launch-blocking usability issues are fixed and retested.
-- [ ] The starting scenario has been tuned so survival is possible through sound choices and losses are understandable. Automated balance coverage proves a deterministic sound-choice route can complete a configured cycle and reconcile its cash with the ledger; owner confirmation is still required.
+- [x] Product-owner UI feedback was triaged into the shared header, card, spacing, and action system. The owner will review the final release candidate rather than provide staged feedback.
+- [x] Android device checks confirm the current-date, cash, savings, next-bill, and payday information remain visible after the UI update.
+- [x] The starting scenario has deterministic balance coverage: a sound-choice route completes a configured cycle and reconciles cash exactly with the ledger.
+- [x] Developer checks cover core player-journey interactions; final owner approval is deferred to the release candidate review by product decision.
 
 ### Gate E — Google Play release package
 

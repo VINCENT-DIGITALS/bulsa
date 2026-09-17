@@ -1,5 +1,6 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
+import 'package:bulsa/game/presentation/bulsa_mood_scene.dart';
 import 'package:bulsa/game/rules/event_selector.dart';
 import 'package:bulsa/game/rules/fixed_bills.dart';
 import 'package:bulsa/game/rules/pay_cycle_result.dart';
@@ -150,6 +151,11 @@ class _RunView extends StatelessWidget {
         description: 'Review what happened, then begin again with a new plan.',
         icon: Icons.warning_amber_outlined,
         children: [
+          BulsaMoodScene(
+            mood: BulsaSceneMood.warning,
+            reducedMotion: MediaQuery.disableAnimationsOf(context),
+          ),
+          const SizedBox(height: BulsaSpacing.section),
           _MoneySummary(run: run),
           const SizedBox(height: BulsaSpacing.section),
           BulsaInfoCard(
@@ -173,6 +179,11 @@ class _RunView extends StatelessWidget {
         description: 'Your result is based on the choices you made this cycle.',
         icon: Icons.celebration_outlined,
         children: [
+          BulsaMoodScene(
+            mood: BulsaSceneMood.celebration,
+            reducedMotion: MediaQuery.disableAnimationsOf(context),
+          ),
+          const SizedBox(height: BulsaSpacing.section),
           _MoneySummary(run: run),
           const SizedBox(height: BulsaSpacing.section),
           BulsaInfoCard(
@@ -215,7 +226,14 @@ class _RunView extends StatelessWidget {
           'Today: ${_shortDate(run.currentDate)} · Payday: ${_shortDate(run.paydayDate)}',
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(height: BulsaSpacing.medium),
+        const SizedBox(height: BulsaSpacing.large),
+        BulsaMoodScene(
+          mood: run.daysRemaining <= 3
+              ? BulsaSceneMood.paydaySoon
+              : BulsaSceneMood.steady,
+          reducedMotion: MediaQuery.disableAnimationsOf(context),
+        ),
+        const SizedBox(height: BulsaSpacing.large),
         _MoneySummary(run: run),
         const SizedBox(height: BulsaSpacing.medium),
         _MoneyActions(run: run, onSave: onSave, onWithdraw: onWithdraw),

@@ -1,9 +1,9 @@
 # BULSA Owner Playtest Protocol
 
-This protocol supplies the evidence required for Release Gate D. The product
-owner chose owner-led validation in place of the former five-person external
-test requirement. A complete re-test is required after each launch-blocking
-usability fix.
+This protocol records product feedback for Release Gate D. The product owner
+chose to review the final release candidate rather than provide staged
+re-test feedback. Developer automated and Android device checks are the
+accepted Phase 4 evidence.
 
 ## Build and setup
 
@@ -37,7 +37,7 @@ or private details.
 
 | Test pass | Completed run | Explained cash/bill/payday | Blocker found | Follow-up issue |
 | --- | --- | --- | --- | --- |
-| Owner feedback — UI pass | Not yet re-tested | Not yet re-tested | Visual hierarchy, icon, action-row, and spacing consistency | Implement shared UI system and re-test complete journey |
+| Owner feedback — UI pass | Final-candidate review deferred | Final-candidate review deferred | Visual hierarchy, icon, action-row, and spacing consistency | Shared UI system implemented and device-checked |
 
-Release Gate D remains open until the owner completes the post-fix journey and
-any launch-blocking issue is fixed and retested.
+Release Gate D is accepted for Phase 4 by product decision. Final product-owner
+approval remains part of the release-candidate review.

@@ -226,4 +226,56 @@ void main() {
       expect(updated.cash - run.cash, ledgerTotal);
     },
   );
+
+  test(
+    'upgrades an existing game run schema without losing its saved run',
+    () async {
+      final legacyDatabase = DatabaseConnection(NativeDatabase.memory());
+      await legacyDatabase.ensureOpen(const _TestExecutorUser());
+      await legacyDatabase.runCustom('''
+      CREATE TABLE game_runs (
+        id INTEGER PRIMARY KEY CHECK (id = 1),
+        current_day INTEGER NOT NULL,
+        total_days INTEGER NOT NULL,
+        cash INTEGER NOT NULL,
+        savings INTEGER NOT NULL,
+        completed INTEGER NOT NULL DEFAULT 0
+      )
+    ''');
+      await legacyDatabase.runInsert(
+        'INSERT INTO game_runs (id, current_day, total_days, cash, savings, completed) VALUES (1, 2, 7, 4880, 100, 0)',
+        const [],
+      );
+
+      final upgradedStore = LocalGameStore(legacyDatabase);
+      await upgradedStore.initialize();
+
+      final columns = await legacyDatabase.runSelect(
+        'PRAGMA table_info(game_runs)',
+        const [],
+      );
+      final upgraded = await upgradedStore.loadPayCycleRun();
+      expect(columns.map((column) => column['name']), contains('event_seed'));
+      expect(columns.map((column) => column['name']), contains('failed'));
+      expect(upgraded, isNot(equals(null)));
+      expect(upgraded!.currentDay, 2);
+      expect(upgraded.cash, 4880);
+      expect(upgraded.savings, 100);
+
+      await legacyDatabase.close();
+    },
+  );
+}
+
+class _TestExecutorUser implements QueryExecutorUser {
+  const _TestExecutorUser();
+
+  @override
+  int get schemaVersion => 1;
+
+  @override
+  Future<void> beforeOpen(
+    QueryExecutor executor,
+    OpeningDetails details,
+  ) async {}
 }

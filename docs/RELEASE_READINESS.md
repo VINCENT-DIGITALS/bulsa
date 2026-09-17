@@ -33,19 +33,19 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 
 - [x] A first-time player can understand the purpose and start a run without guidance from the developer. A local three-step onboarding screen explains the cycle, choices, and ledger, then directs the player to Calendar setup; clean-install Android visual QA passed.
 - [x] A local Help & privacy route is visible from Profile. It explains the offline game, local storage, and that no public support or privacy-policy destination exists until the owner verifies one; it contains no fake email or URL.
-- [ ] The player can create/edit a local profile and pay schedule.
-- [ ] The game shows current date, cash, savings, next bill, next payday, and payday status.
-- [ ] Each choice creates exactly one understandable financial/ledger outcome.
-- [ ] The run can be closed/reopened without losing progress.
-- [ ] The player can finish a complete cycle and see an understandable result plus restart option.
+- [x] The player can create/edit a local profile and pay schedule. Widget tests save Profile details and Calendar weekend policy/confirmed income to Drift/SQLite.
+- [x] The game shows current date, cash, savings, next bill, next payday, and payday status. Widget and Android device checks cover the Today summary; Calendar renders the adjusted expected-payday status.
+- [x] Each choice creates exactly one understandable financial/ledger outcome. The completed-cycle widget test verifies the exact selected choices, payday income, resulting cash, and ledger descriptions.
+- [x] The run can be closed/reopened without losing progress. Store and completed-cycle widget tests reload the persisted run and ledger after choices.
+- [x] The player can finish a complete cycle and see an understandable result plus restart option. The widget journey reaches `Pay cycle complete` and exposes `Start a new pay cycle`.
 
 ### Gate B — Correctness and persistence
 
-- [ ] Automated unit tests cover money updates, bills, savings withdrawals, scoring, and ledger entries.
-- [ ] Automated calendar tests cover February in leap/non-leap years, month-end, 15th/month-end cutoffs, and weekend advance/delay/keep rules.
-- [ ] Automated Drift migration/persistence tests cover save, restart, and existing-data upgrades.
-- [ ] Seeded event tests prove that the same seed produces the same event sequence.
-- [ ] No known issue can create or lose in-game money without a ledger entry.
+- [x] Automated unit tests cover money updates, bills, savings withdrawals, scoring, and ledger entries.
+- [x] Automated calendar tests cover February in leap/non-leap years, month-end, 15th/month-end cutoffs, and weekend advance/delay/keep rules.
+- [x] Automated Drift migration/persistence tests cover save, restart, and existing-data upgrades, including a legacy `game_runs` table.
+- [x] Seeded event tests prove that the same seed produces the same event sequence.
+- [x] No known issue can create or lose in-game money without a ledger entry; the money mutations use one database transaction and tests reconcile final cash against the ledger.
 
 ### Gate C — Design, accessibility, and quality
 

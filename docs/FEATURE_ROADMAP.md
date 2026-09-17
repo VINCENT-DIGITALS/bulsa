@@ -11,7 +11,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 **Active phase: v1.0 release hardening.** Phases 0–5 are implemented. The remaining work is the required first-time journey, help/privacy, accessibility, migration, and Android release-package evidence.
 
-**Next exact task:** Complete the local player journey and persistence evidence: profile/schedule edits, restart retention, a full cycle, and the matching automated tests. Help and privacy content is now visible from Profile, but a real verified contact destination and hosted privacy-policy URL remain release-owner inputs.
+**Next exact task:** Run Android accessibility and visual QA at 1.3 font scale on both a small and a larger phone viewport, then close the remaining Gate C design/accessibility evidence. Help and privacy content is visible from Profile; a real verified contact destination and hosted privacy-policy URL remain release-owner inputs.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -40,6 +40,8 @@ Goal: prove the core choice loop in a short hard-coded run.
 - [x] Show a completed-run result and restart option.
 
 **Verification evidence:** Local-store unit tests cover creating/persisting a run, recording a choice, and completing Day 7. Android emulator verification showed Day 1 → Day 2 with cash changing from ₱5,000 to ₱4,880, retained after an app restart; the Ledger tab displayed the recorded −₱120 entry.
+
+**Release-hardening evidence:** Widget tests now save an optional local profile, save Calendar policy/income settings, play a configured two-day cycle through the visible Today choices, render its result screen, and reload the completed run and ledger. Store tests exercise legacy-schema upgrade, calendar settings, bills, savings transfers, payroll, failure, and ledger reconciliation. This work also fixed three asynchronous `setState` defects in profile and Calendar saving flows.
 
 **Exit condition:** A player can complete a 7-day run in under five minutes, understands why cash changed, and Gate A/B persistence/ledger checks pass.
 

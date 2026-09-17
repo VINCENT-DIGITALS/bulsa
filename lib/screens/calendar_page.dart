@@ -34,7 +34,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> _setPolicy(WeekendPaydayPolicy policy) async {
     await widget.store.saveWeekendPaydayPolicy(policy);
-    setState(() => _settingsFuture = _loadSettings());
+    setState(() {
+      _settingsFuture = _loadSettings();
+    });
   }
 
   Future<void> _selectStartDate() async {
@@ -114,7 +116,9 @@ class _CalendarPageState extends State<CalendarPage> {
     await widget.store.saveConfirmedSalary(result.salary);
     await widget.store.saveRecurringAllowance(result.allowance);
     if (mounted) {
-      setState(() => _settingsFuture = _loadSettings());
+      setState(() {
+        _settingsFuture = _loadSettings();
+      });
     }
   }
 

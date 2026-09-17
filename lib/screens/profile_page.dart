@@ -61,7 +61,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     await widget.store.saveProfile(profile);
     if (!mounted) return;
-    setState(() => _profileFuture = Future.value(profile));
+    setState(() {
+      _profileFuture = Future.value(profile);
+    });
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profile saved on this device.')),
     );

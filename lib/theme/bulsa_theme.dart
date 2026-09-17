@@ -14,6 +14,15 @@ abstract final class BulsaRadii {
   static const modal = Radius.circular(24);
 }
 
+abstract final class BulsaSpacing {
+  static const xSmall = 4.0;
+  static const small = 8.0;
+  static const medium = 12.0;
+  static const large = 16.0;
+  static const xLarge = 24.0;
+  static const xxLarge = 32.0;
+}
+
 ThemeData buildBulsaTheme() {
   final colorScheme =
       ColorScheme.fromSeed(
@@ -31,6 +40,43 @@ ThemeData buildBulsaTheme() {
     useMaterial3: true,
     colorScheme: colorScheme,
     scaffoldBackgroundColor: BulsaColors.background,
+    textTheme: const TextTheme(
+      headlineSmall: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 24,
+        fontWeight: FontWeight.w700,
+        height: 1.2,
+      ),
+      titleLarge: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        height: 1.3,
+      ),
+      titleMedium: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.w700,
+        height: 1.35,
+      ),
+      bodyLarge: TextStyle(color: BulsaColors.black, fontSize: 16, height: 1.5),
+      bodyMedium: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 14,
+        height: 1.45,
+      ),
+      labelLarge: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+      ),
+      labelSmall: TextStyle(
+        color: BulsaColors.black,
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+        letterSpacing: 0.8,
+      ),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: BulsaColors.background,
       foregroundColor: BulsaColors.black,
@@ -64,6 +110,16 @@ ThemeData buildBulsaTheme() {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(BulsaRadii.control),
         ),
+      ),
+    ),
+    navigationBarTheme: const NavigationBarThemeData(
+      backgroundColor: BulsaColors.background,
+      indicatorColor: BulsaColors.primary,
+      labelTextStyle: WidgetStatePropertyAll(
+        TextStyle(color: BulsaColors.black, fontWeight: FontWeight.w700),
+      ),
+      iconTheme: WidgetStatePropertyAll(
+        IconThemeData(color: BulsaColors.black),
       ),
     ),
   );

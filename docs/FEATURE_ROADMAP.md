@@ -9,7 +9,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 ## Current status
 
-**Active phase: Phase 0 — Foundation.** The Flutter app shell, Android/Firebase Core configuration, and shared theme tokens are in place; gameplay implementation has not started yet.
+**Active phase: Phase 1 — First playable daily decision.** Phase 0 foundation is complete and verified on the Android emulator at normal and 1.3 font scale; gameplay implementation is now beginning.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -21,15 +21,17 @@ Goal: create a stable Flutter app shell and shared design system.
 - [x] Add `BulsaColors`, radius tokens, and shared button/card theme configuration.
 - [x] Apply `#F8F8F8` page background and the mandatory design system.
 - [x] Create navigation placeholders: Today, Calendar, Ledger, Profile.
-- [ ] Verify the interface on a small mobile viewport.
+- [x] Verify the interface on a small mobile viewport at normal and 1.3 font scale.
 
-**Next exact task:** Add shared typography and reusable page/button/card components, then verify the shell on an Android emulator at normal and 1.3 font scale.
+**Verification evidence:** `flutter analyze`, widget tests, and Android debug APK build passed. The Android emulator showed the shell at normal and 1.3 font scale with no clipped essential content.
 
 **Exit condition:** A polished static shell exists with no arbitrary colors/radii, and Release Gate C visual/accessibility checks have evidence.
 
 ## Phase 1 — First playable daily decision
 
 Goal: prove the core choice loop in a short hard-coded run.
+
+**Next exact task:** Add Drift/SQLite and the local game-state model, then create a deterministic 7-day scenario with one playable choice.
 
 - [ ] Add Drift/SQLite game state: date, cash, savings, next bill, ledger, and app settings.
 - [ ] Create one 7-day scenario with fixed dates.

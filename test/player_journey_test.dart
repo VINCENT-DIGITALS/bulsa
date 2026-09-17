@@ -119,6 +119,36 @@ void main() {
     expect(run.savings, 0);
   });
 
+  testWidgets('renders each core tab on a compact phone at 1.3 text scale', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await store.saveOnboardingComplete();
+    await store.saveRunStartDate(DateTime(2026, 9, 14));
+
+    await tester.pumpWidget(BulsaApp(store: store));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+    expect(find.text('Calendar'), findsWidgets);
+
+    for (final destination in [
+      Icons.today_outlined,
+      Icons.receipt_long_outlined,
+      Icons.person_outline,
+      Icons.calendar_month_outlined,
+    ]) {
+      await tester.tap(find.byIcon(destination).first);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pump();
+      expect(tester.takeException(), equals(null));
+    }
+  });
+
   testWidgets('plays and persists a complete configured pay cycle', (
     tester,
   ) async {

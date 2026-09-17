@@ -13,6 +13,8 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 **Next exact task:** Run Android accessibility and visual QA at 1.3 font scale on both a small and a larger phone viewport, then close the remaining Gate C design/accessibility evidence. Help and privacy content is visible from Profile; a real verified contact destination and hosted privacy-policy URL remain release-owner inputs.
 
+**Automated accessibility evidence:** A compact 360 × 640 logical-pixel widget pass at 1.3 text scale now opens each core tab without a Flutter exception. This protects against layout/runtime regressions, but does not replace the pending Android visual inspection for clipped essential content.
+
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
 ## Phase 0 — Foundation

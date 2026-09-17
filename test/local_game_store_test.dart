@@ -77,4 +77,11 @@ void main() {
       WeekendPaydayPolicy.nextMonday,
     );
   });
+
+  test('persists the selected run start date', () async {
+    final date = DateTime(2026, 9, 15);
+    await store.saveRunStartDate(date);
+
+    expect(await store.loadRunStartDate(), date);
+  });
 }

@@ -57,6 +57,24 @@ class LocalGameStore {
     );
   }
 
+  Future<DateTime> loadRunStartDate() async {
+    final rows = await _database.runSelect(
+      'SELECT value FROM app_settings WHERE key = ?',
+      const ['run_start_date'],
+    );
+    return rows.isEmpty
+        ? DateTime.now()
+        : DateTime.parse(rows.single['value']! as String);
+  }
+
+  Future<void> saveRunStartDate(DateTime date) {
+    final normalized = DateTime(date.year, date.month, date.day);
+    return _database.runCustom(
+      'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
+      ['run_start_date', normalized.toIso8601String()],
+    );
+  }
+
   Future<GameRun> loadOrCreateDemoRun() async {
     final existing = await _loadRun();
     if (existing != null) {

@@ -1,6 +1,7 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
+import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
 import 'package:flutter/material.dart';
 
@@ -14,29 +15,52 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
-  late Future<WeekendPaydayPolicy> _policyFuture;
+  late Future<_CalendarSettings> _settingsFuture;
 
   @override
   void initState() {
     super.initState();
-    _policyFuture = widget.store.loadWeekendPaydayPolicy();
+    _settingsFuture = _loadSettings();
   }
+
+  Future<_CalendarSettings> _loadSettings() async => _CalendarSettings(
+    policy: await widget.store.loadWeekendPaydayPolicy(),
+    startDate: await widget.store.loadRunStartDate(),
+  );
 
   Future<void> _setPolicy(WeekendPaydayPolicy policy) async {
     await widget.store.saveWeekendPaydayPolicy(policy);
-    setState(() => _policyFuture = Future.value(policy));
+    setState(() => _settingsFuture = _loadSettings());
+  }
+
+  Future<void> _selectStartDate() async {
+    final settings = await _settingsFuture;
+    if (!mounted) return;
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: settings.startDate,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2035),
+    );
+    if (selected != null) {
+      await widget.store.saveRunStartDate(selected);
+      if (mounted) {
+        setState(() => _settingsFuture = _loadSettings());
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<WeekendPaydayPolicy>(
-      future: _policyFuture,
+    return FutureBuilder<_CalendarSettings>(
+      future: _settingsFuture,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
         }
-        final policy = snapshot.data!;
-        final today = DateTime.now();
+        final settings = snapshot.data!;
+        final policy = settings.policy;
+        final today = settings.startDate;
         final paydays = PaySchedule(
           rules: const [PaydayRule.fifteenth, PaydayRule.monthEnd],
           weekendPolicy: policy,
@@ -55,6 +79,11 @@ class _CalendarPageState extends State<CalendarPage> {
               message: 'Weekend policy: ${_policyLabel(policy)}.',
             ),
             const SizedBox(height: BulsaSpacing.large),
+            BulsaSecondaryButton(
+              label: 'Run starts: ${_formatDate(today)}',
+              onPressed: _selectStartDate,
+            ),
+            const SizedBox(height: BulsaSpacing.medium),
             SegmentedButton<WeekendPaydayPolicy>(
               segments: const [
                 ButtonSegment(
@@ -83,6 +112,13 @@ class _CalendarPageState extends State<CalendarPage> {
       },
     );
   }
+}
+
+class _CalendarSettings {
+  const _CalendarSettings({required this.policy, required this.startDate});
+
+  final WeekendPaydayPolicy policy;
+  final DateTime startDate;
 }
 
 class _PaydayCard extends StatelessWidget {

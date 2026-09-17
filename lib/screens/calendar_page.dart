@@ -65,6 +65,11 @@ class _CalendarPageState extends State<CalendarPage> {
           rules: const [PaydayRule.fifteenth, PaydayRule.monthEnd],
           weekendPolicy: policy,
         ).paydaysForMonth(today.year, today.month);
+        final schedule = PaySchedule(
+          rules: const [PaydayRule.fifteenth, PaydayRule.monthEnd],
+          weekendPolicy: policy,
+        );
+        final nextPayday = schedule.nextPaydayAfter(today);
         return BulsaPage(
           title: 'Calendar',
           children: [
@@ -103,6 +108,14 @@ class _CalendarPageState extends State<CalendarPage> {
               onSelectionChanged: (selection) => _setPolicy(selection.single),
             ),
             const SizedBox(height: BulsaSpacing.xLarge),
+            BulsaInfoCard(
+              icon: Icons.payments_outlined,
+              title: 'Next expected payday: ${_formatDate(nextPayday.payDate)}',
+              message: nextPayday.payDate == nextPayday.scheduledDate
+                  ? 'Status: Expected'
+                  : 'Status: ${policy == WeekendPaydayPolicy.previousFriday ? 'Early' : 'Late'} · scheduled ${_formatDate(nextPayday.scheduledDate)}',
+            ),
+            const SizedBox(height: BulsaSpacing.large),
             for (final payday in paydays) ...[
               _PaydayCard(payday: payday),
               const SizedBox(height: BulsaSpacing.small),

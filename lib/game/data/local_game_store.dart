@@ -115,6 +115,19 @@ class LocalGameStore {
   Future<void> saveRecurringAllowance(int amount) =>
       _saveAmountSetting('recurring_allowance', amount);
 
+  Future<bool> loadOnboardingComplete() async {
+    final rows = await _database.runSelect(
+      'SELECT value FROM app_settings WHERE key = ?',
+      const ['onboarding_complete'],
+    );
+    return rows.isNotEmpty && rows.single['value'] == 'true';
+  }
+
+  Future<void> saveOnboardingComplete() => _database.runCustom(
+    'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
+    const ['onboarding_complete', 'true'],
+  );
+
   Future<int> _loadAmountSetting(String key) async {
     final rows = await _database.runSelect(
       'SELECT value FROM app_settings WHERE key = ?',

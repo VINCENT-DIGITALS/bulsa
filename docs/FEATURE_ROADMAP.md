@@ -11,7 +11,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 **Active phase: v1.0 release hardening.** Phases 0–5 are implemented. The remaining work is the required first-time journey, help/privacy, accessibility, migration, and Android release-package evidence.
 
-**Next exact task:** Build and verify the first-time player journey (onboarding plus a clear way to start a fresh configured cycle), then close the remaining v1.0 release gates in order.
+**Next exact task:** Build a local Help, Privacy, and contact route, then continue closing the remaining v1.0 release gates in order.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 

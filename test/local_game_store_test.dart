@@ -114,6 +114,14 @@ void main() {
     expect(await store.loadRecurringAllowance(), 750);
   });
 
+  test('persists onboarding completion locally', () async {
+    expect(await store.loadOnboardingComplete(), isFalse);
+
+    await store.saveOnboardingComplete();
+
+    expect(await store.loadOnboardingComplete(), isTrue);
+  });
+
   test(
     'persists an optional local profile without changing payday income',
     () async {

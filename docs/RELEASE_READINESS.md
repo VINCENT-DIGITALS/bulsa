@@ -31,7 +31,7 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 
 ### Gate A — Complete player journey
 
-- [ ] A first-time player can understand the purpose and start a run without guidance from the developer.
+- [x] A first-time player can understand the purpose and start a run without guidance from the developer. A local three-step onboarding screen explains the cycle, choices, and ledger, then directs the player to Calendar setup; clean-install Android visual QA passed.
 - [ ] The player can create/edit a local profile and pay schedule.
 - [ ] The game shows current date, cash, savings, next bill, next payday, and payday status.
 - [ ] Each choice creates exactly one understandable financial/ledger outcome.

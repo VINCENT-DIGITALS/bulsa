@@ -3,6 +3,7 @@ import 'package:bulsa/screens/calendar_page.dart';
 import 'package:bulsa/screens/ledger_page.dart';
 import 'package:bulsa/screens/profile_page.dart';
 import 'package:bulsa/screens/today_page.dart';
+import 'package:bulsa/screens/welcome_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,22 +30,71 @@ class BulsaApp extends StatelessWidget {
       title: 'BULSA',
       debugShowCheckedModeBanner: false,
       theme: buildBulsaTheme(),
-      home: BulsaHomePage(store: store),
+      home: store == null
+          ? const BulsaHomePage()
+          : _BulsaAppEntry(store: store!),
     );
   }
 }
 
+class _BulsaAppEntry extends StatefulWidget {
+  const _BulsaAppEntry({required this.store});
+
+  final LocalGameStore store;
+
+  @override
+  State<_BulsaAppEntry> createState() => _BulsaAppEntryState();
+}
+
+class _BulsaAppEntryState extends State<_BulsaAppEntry> {
+  late Future<bool> _onboardingFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _onboardingFuture = widget.store.loadOnboardingComplete();
+  }
+
+  void _completeOnboarding() {
+    setState(() => _onboardingFuture = Future.value(true));
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<bool>(
+    future: _onboardingFuture,
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      }
+      if (!snapshot.data!) {
+        return WelcomePage(
+          store: widget.store,
+          onComplete: _completeOnboarding,
+        );
+      }
+      return BulsaHomePage(store: widget.store, initialIndex: 1);
+    },
+  );
+}
+
 class BulsaHomePage extends StatefulWidget {
-  const BulsaHomePage({super.key, this.store});
+  const BulsaHomePage({super.key, this.store, this.initialIndex = 0});
 
   final LocalGameStore? store;
+  final int initialIndex;
 
   @override
   State<BulsaHomePage> createState() => _BulsaHomePageState();
 }
 
 class _BulsaHomePageState extends State<BulsaHomePage> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   static const _placeholderPages = [
     _PlaceholderPage(

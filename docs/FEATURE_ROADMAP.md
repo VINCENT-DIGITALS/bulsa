@@ -106,3 +106,16 @@ Goal: add long-term motivation only after the core loop is proven.
 - [ ] Local save/load, then optional cloud sync if explicitly desired.
 
 **Not planned without a separate product/security decision:** real payments, bank connections, payment-card storage, money transfer, or real payment QR codes.
+
+## Phase 7 — Optional Supporter subscription and support
+
+Goal: fund cloud sync and support without paywalling the game.
+
+- [ ] Build public help centre and standard contact route.
+- [ ] Build a Supporter priority-support request path with honest response expectations.
+- [ ] Complete Firebase Auth and verified cloud sync before selling Supporter access.
+- [ ] Configure monthly and yearly Google Play subscription products and test with license testers.
+- [ ] Build a secure backend for Play purchase verification, entitlement status, cancellation, refunds, and restoration.
+- [ ] Keep all local game features/data free when the subscription expires.
+
+**Exit condition:** A player can voluntarily subscribe through Google Play, restore a purchase, use cloud sync and priority support while active, and continue playing locally after cancellation.

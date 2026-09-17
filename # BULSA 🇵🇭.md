@@ -7,6 +7,7 @@ This file describes the product and gameplay. The following files are the rules 
 - [Design system](docs/DESIGN_SYSTEM.md) — mandatory colors, radii, spacing, and component behavior.
 - [Feature roadmap](docs/FEATURE_ROADMAP.md) — phased feature order and the current continuation point.
 - [Backend and authentication](docs/BACKEND_AND_AUTH.md) — storage, optional sign-in, cloud backup, and security decision.
+- [Monetization and support](docs/MONETIZATION_AND_SUPPORT.md) — free-core promise, Supporter subscription, and customer support design.
 - [Agent working rules](AGENTS.md) — instructions that apply to future implementation work.
 
 ## Product decision: make a game first

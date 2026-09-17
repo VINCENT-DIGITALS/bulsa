@@ -6,10 +6,11 @@ Read these files before changing the product:
 2. [Design system](docs/DESIGN_SYSTEM.md) — mandatory visual tokens and UI rules.
 3. [Feature roadmap](docs/FEATURE_ROADMAP.md) — current phase, scope, and continuation point.
 4. [Backend and authentication](docs/BACKEND_AND_AUTH.md) — offline-first storage, Firebase cloud sync/FCM, and security rules.
+5. [Monetization and support](docs/MONETIZATION_AND_SUPPORT.md) — free-core promise, Supporter entitlement, support, and billing rules.
 
 ## Non-negotiable rules
 
-- Use the connected GitHub repository as the project source of truth. Create focused branches when useful, commit completed work with clear messages, and push changes so work can resume from GitHub.
+- Use the connected GitHub repository as the project source of truth. The agent decides when to use a focused branch, commit, and push: keep `main` stable, use branches for larger/riskier work, and publish completed verified milestones with clear messages so work can resume from GitHub.
 - Follow `docs/DESIGN_SYSTEM.md` exactly. Do not introduce unapproved colors or arbitrary border radii.
 - Build only the active roadmap phase unless the user explicitly changes scope.
 - Preserve the distinction between confirmed and possible income.
@@ -18,3 +19,4 @@ Read these files before changing the product:
 - Keep the app mobile-first, clear, and accessible.
 - Do not add backend packages, credentials, network calls, or authentication screens before the roadmap reaches the backend/auth phase.
 - Use Drift/SQLite for **all** local persistence, including settings. Never add or use `shared_preferences`.
+- Keep core gameplay and all local player data free. Subscription access may cover only verified cloud sync and priority customer support as defined in `docs/MONETIZATION_AND_SUPPORT.md`.

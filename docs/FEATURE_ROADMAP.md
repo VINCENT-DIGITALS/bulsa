@@ -9,7 +9,9 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 ## Current status
 
-**Active phase: Phase 2 — Calendar and pay cycles.** Phase 1's deterministic 7-day playable loop is complete, persisted locally, and verified on the Android emulator.
+**Active phase: Phase 3 — Profiles and variable income.** Phase 2's configurable 15th/month-end pay cycle is persisted locally and verified by calendar, storage, and Android checks.
+
+**Next exact task:** Add a local-only optional profile with display name, job title, company/work tags, and pay setup. Keep all possible project incentives separate from confirmed payday forecasts.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -47,14 +49,16 @@ Goal: make the game reflect real-world cutoff patterns.
 
 **Next exact task:** Create calendar/payday domain models and tests for month-end, February, and the 15th/month-end cutoff schedule before replacing the fixed 7-day dates in the UI.
 
-- [ ] Add selectable run start date.
-- [ ] Support payday on a day number and on the last calendar day of a month.
-- [ ] Handle 28–31-day months and leap years.
-- [ ] Add payday weekend/holiday policy: advance, delay, or keep date.
-- [ ] Show payday status: Expected, Early, Late, Received, Pending.
-- [ ] Support confirmed salary and recurring allowance.
+- [x] Add selectable run start date.
+- [x] Support payday on a day number and on the last calendar day of a month.
+- [x] Handle 28–31-day months and leap years.
+- [x] Add payday weekend policy: advance, delay, or keep date.
+- [x] Show payday status: Expected, Early, Late, Received, Pending.
+- [x] Support confirmed salary and recurring allowance.
 
-**Exit condition:** A 15th/month-end pay cycle works correctly across month boundaries, with Gate B calendar tests for February and weekend policies.
+**Verification evidence:** Unit tests cover February in common and leap years, Saturday advance, Sunday delay, next-payday calculation across a month boundary, start-date persistence, and final-day confirmed salary/allowance ledger credits. `flutter analyze`, all 11 tests, and Android debug APK builds passed. Android emulator checks confirmed the Calendar controls and adjusted-payday presentation.
+
+**Exit condition:** A 15th/month-end pay cycle works correctly across month boundaries, with Gate B calendar tests for February and weekend policies. **Met.**
 
 ## Phase 3 — Profiles and variable income
 

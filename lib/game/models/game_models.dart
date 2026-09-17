@@ -2,18 +2,28 @@ class GameRun {
   const GameRun({
     required this.currentDay,
     required this.totalDays,
+    required this.startDate,
+    required this.paydayDate,
     required this.cash,
     required this.savings,
+    required this.confirmedSalary,
+    required this.recurringAllowance,
     required this.completed,
   });
 
   final int currentDay;
   final int totalDays;
+  final DateTime startDate;
+  final DateTime paydayDate;
   final int cash;
   final int savings;
+  final int confirmedSalary;
+  final int recurringAllowance;
   final bool completed;
 
   int get daysRemaining => completed ? 0 : totalDays - currentDay + 1;
+
+  DateTime get currentDate => startDate.add(Duration(days: currentDay - 1));
 }
 
 class LedgerEntry {

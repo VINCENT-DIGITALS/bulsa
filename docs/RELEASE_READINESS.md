@@ -67,8 +67,8 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 ### Gate E — Google Play release package
 
 - [ ] Unique final Android application ID is confirmed before production release.
-- [ ] `targetSdk` meets the Google Play requirement at submission time; re-check immediately before upload.
-- [ ] Version name/code are set for the release.
+- [x] `targetSdk` meets the Google Play requirement at submission time: `targetSdk = 36` is configured and verified on 17 September 2026. Google Play requires new mobile submissions to target Android 16 / API 36 or higher from 31 August 2026; re-check immediately before upload. ([Official requirement](https://support.google.com/googleplay/android-developer/answer/11926878?hl=en-AU))
+- [x] Version name/code are set for the release: `1.0.0+1` in `pubspec.yaml`. Increment the build number before every later Play upload.
 - [ ] Signed Android App Bundle (`.aab`), not only a debug APK, is built and installed/tested.
 - [ ] Release keystore is privately backed up and never committed to Git.
 - [ ] App icon, feature graphic, screenshots, short description, full description, category, contact email, and content rating are ready.

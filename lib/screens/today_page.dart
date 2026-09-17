@@ -20,6 +20,7 @@ class TodayPage extends StatefulWidget {
 
 class _TodayPageState extends State<TodayPage> {
   late Future<_TodayData> _runFuture;
+  var _isMutating = false;
 
   @override
   void initState() {
@@ -33,10 +34,7 @@ class _TodayPageState extends State<TodayPage> {
   );
 
   Future<void> _selectChoice(GameChoice choice) async {
-    setState(() {
-      _runFuture = _applyChoice(choice);
-    });
-    await _runFuture;
+    await _runMutation(() => _applyChoice(choice));
   }
 
   Future<_TodayData> _applyChoice(GameChoice choice) async {
@@ -45,17 +43,14 @@ class _TodayPageState extends State<TodayPage> {
   }
 
   Future<void> _restart() async {
-    await widget.store.resetPayCycleRun();
-    setState(() {
-      _runFuture = _loadTodayData();
+    await _runMutation(() async {
+      await widget.store.resetPayCycleRun();
+      return _loadTodayData();
     });
   }
 
   Future<void> _moveToSavings(int amount) async {
-    setState(() {
-      _runFuture = _saveCash(amount);
-    });
-    await _runFuture;
+    await _runMutation(() => _saveCash(amount));
   }
 
   Future<_TodayData> _saveCash(int amount) async {
@@ -64,6 +59,7 @@ class _TodayPageState extends State<TodayPage> {
   }
 
   Future<void> _confirmWithdrawal(int amount) async {
+    if (_isMutating) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -84,15 +80,29 @@ class _TodayPageState extends State<TodayPage> {
       ),
     );
     if (confirmed != true) return;
-    setState(() {
-      _runFuture = _withdraw(amount);
-    });
-    await _runFuture;
+    await _runMutation(() => _withdraw(amount));
   }
 
   Future<_TodayData> _withdraw(int amount) async {
     await widget.store.withdrawSavings(amount);
     return _loadTodayData();
+  }
+
+  Future<void> _runMutation(Future<_TodayData> Function() action) async {
+    if (_isMutating) return;
+    late Future<_TodayData> mutation;
+    setState(() {
+      _isMutating = true;
+      mutation = action();
+      _runFuture = mutation;
+    });
+    try {
+      await mutation;
+    } finally {
+      if (mounted) {
+        setState(() => _isMutating = false);
+      }
+    }
   }
 
   @override
@@ -124,6 +134,7 @@ class _TodayPageState extends State<TodayPage> {
           onRestart: _restart,
           onSave: _moveToSavings,
           onWithdraw: _confirmWithdrawal,
+          isBusy: _isMutating,
         );
       },
     );
@@ -138,6 +149,7 @@ class _RunView extends StatelessWidget {
     required this.onRestart,
     required this.onSave,
     required this.onWithdraw,
+    required this.isBusy,
   });
 
   final GameRun run;
@@ -146,6 +158,7 @@ class _RunView extends StatelessWidget {
   final VoidCallback onRestart;
   final ValueChanged<int> onSave;
   final ValueChanged<int> onWithdraw;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +184,7 @@ class _RunView extends StatelessWidget {
           const SizedBox(height: BulsaSpacing.large),
           BulsaPrimaryButton(
             label: 'Start a new pay cycle',
-            onPressed: onRestart,
+            onPressed: isBusy ? null : onRestart,
           ),
         ],
       );
@@ -204,7 +217,7 @@ class _RunView extends StatelessWidget {
           const SizedBox(height: BulsaSpacing.large),
           BulsaPrimaryButton(
             label: 'Start a new pay cycle',
-            onPressed: onRestart,
+            onPressed: isBusy ? null : onRestart,
           ),
         ],
       );
@@ -240,11 +253,16 @@ class _RunView extends StatelessWidget {
         const SizedBox(height: BulsaSpacing.large),
         _MoneySummary(run: run),
         const SizedBox(height: BulsaSpacing.medium),
-        _MoneyActions(run: run, onSave: onSave, onWithdraw: onWithdraw),
+        _MoneyActions(
+          run: run,
+          onSave: onSave,
+          onWithdraw: onWithdraw,
+          isBusy: isBusy,
+        ),
         const SizedBox(height: BulsaSpacing.medium),
         _NextBill(run: run),
         const SizedBox(height: BulsaSpacing.section),
-        _EventCard(event: event, onChoice: onChoice),
+        _EventCard(event: event, onChoice: onChoice, isBusy: isBusy),
       ],
     );
   }
@@ -255,11 +273,13 @@ class _MoneyActions extends StatelessWidget {
     required this.run,
     required this.onSave,
     required this.onWithdraw,
+    required this.isBusy,
   });
 
   final GameRun run;
   final ValueChanged<int> onSave;
   final ValueChanged<int> onWithdraw;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) => BulsaButtonRow(
@@ -267,12 +287,12 @@ class _MoneyActions extends StatelessWidget {
       BulsaSecondaryButton(
         label: 'Save ₱100',
         icon: Icons.savings_outlined,
-        onPressed: run.cash >= 100 ? () => onSave(100) : null,
+        onPressed: !isBusy && run.cash >= 100 ? () => onSave(100) : null,
       ),
       BulsaSecondaryButton(
         label: 'Withdraw ₱100',
         icon: Icons.account_balance_wallet_outlined,
-        onPressed: run.savings >= 100 ? () => onWithdraw(100) : null,
+        onPressed: !isBusy && run.savings >= 100 ? () => onWithdraw(100) : null,
       ),
     ],
   );
@@ -354,10 +374,15 @@ class _MoneyValue extends StatelessWidget {
 }
 
 class _EventCard extends StatelessWidget {
-  const _EventCard({required this.event, required this.onChoice});
+  const _EventCard({
+    required this.event,
+    required this.onChoice,
+    required this.isBusy,
+  });
 
   final GameEvent event;
   final ValueChanged<GameChoice> onChoice;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
@@ -382,7 +407,7 @@ class _EventCard extends StatelessWidget {
             for (final choice in event.choices) ...[
               BulsaSecondaryButton(
                 label: choice.label,
-                onPressed: () => onChoice(choice),
+                onPressed: isBusy ? null : () => onChoice(choice),
               ),
               const SizedBox(height: BulsaSpacing.small),
             ],

@@ -176,6 +176,7 @@ void main() {
       'Packed snack — ₱0',
     );
     await tester.tap(packedSnack);
+    await tester.tap(packedSnack);
     await tester.pump(const Duration(milliseconds: 300));
     await tester.pump();
 
@@ -196,6 +197,10 @@ void main() {
     expect(
       ledger.map((entry) => entry.description),
       containsAll(['Packed snack', 'Jeepney fare', 'Confirmed salary']),
+    );
+    expect(
+      ledger.where((entry) => entry.description == 'Packed snack'),
+      hasLength(1),
     );
   });
 }

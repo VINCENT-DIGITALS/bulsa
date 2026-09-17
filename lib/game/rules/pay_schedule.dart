@@ -34,6 +34,19 @@ class PaySchedule {
     }).toList();
   }
 
+  Payday nextPaydayAfter(DateTime date) {
+    final normalized = DateTime(date.year, date.month, date.day);
+    for (var offset = 0; offset < 14; offset++) {
+      final month = DateTime(normalized.year, normalized.month + offset);
+      final candidates = paydaysForMonth(month.year, month.month)
+        ..sort((left, right) => left.payDate.compareTo(right.payDate));
+      for (final payday in candidates) {
+        if (!payday.payDate.isBefore(normalized)) return payday;
+      }
+    }
+    throw StateError('No payday found within the next 14 months.');
+  }
+
   DateTime _applyWeekendPolicy(DateTime date) {
     if (weekendPolicy == WeekendPaydayPolicy.keepDate || !_isWeekend(date)) {
       return date;

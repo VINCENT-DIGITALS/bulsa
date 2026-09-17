@@ -39,4 +39,16 @@ void main() {
     expect(payday.scheduledDate, DateTime(2026, 2, 15));
     expect(payday.payDate, DateTime(2026, 2, 16));
   });
+
+  test('finds the next adjusted payday across a month boundary', () {
+    const schedule = PaySchedule(
+      rules: [PaydayRule.fifteenth, PaydayRule.monthEnd],
+      weekendPolicy: WeekendPaydayPolicy.previousFriday,
+    );
+
+    final next = schedule.nextPaydayAfter(DateTime(2026, 10, 31));
+
+    expect(next.rule, PaydayRule.fifteenth);
+    expect(next.payDate, DateTime(2026, 11, 13));
+  });
 }

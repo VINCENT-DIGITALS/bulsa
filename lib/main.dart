@@ -74,7 +74,7 @@ class _BulsaHomePageState extends State<BulsaHomePage> {
       appBar: AppBar(title: const Text('BULSA')),
       body: switch (_selectedIndex) {
         0 when widget.store != null => TodayPage(store: widget.store!),
-        1 => const CalendarPage(),
+        1 when widget.store != null => CalendarPage(store: widget.store!),
         2 when widget.store != null => LedgerPage(store: widget.store!),
         _ => SafeArea(child: _placeholderPages[_selectedIndex]),
       },

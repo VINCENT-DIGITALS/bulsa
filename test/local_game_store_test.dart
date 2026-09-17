@@ -1,5 +1,6 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
+import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -61,5 +62,19 @@ void main() {
 
     expect(updated.completed, isTrue);
     expect(updated.daysRemaining, 0);
+  });
+
+  test('persists the selected weekend payday policy', () async {
+    expect(
+      await store.loadWeekendPaydayPolicy(),
+      WeekendPaydayPolicy.previousFriday,
+    );
+
+    await store.saveWeekendPaydayPolicy(WeekendPaydayPolicy.nextMonday);
+
+    expect(
+      await store.loadWeekendPaydayPolicy(),
+      WeekendPaydayPolicy.nextMonday,
+    );
   });
 }

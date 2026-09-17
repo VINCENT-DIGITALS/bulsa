@@ -1,4 +1,5 @@
 import 'package:bulsa/game/models/game_models.dart';
+import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
@@ -32,6 +33,28 @@ class LocalGameStore {
         description TEXT NOT NULL
       )
     ''');
+    await _database.runCustom('''
+      CREATE TABLE IF NOT EXISTS app_settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      )
+    ''');
+  }
+
+  Future<WeekendPaydayPolicy> loadWeekendPaydayPolicy() async {
+    final rows = await _database.runSelect(
+      'SELECT value FROM app_settings WHERE key = ?',
+      const ['weekend_payday_policy'],
+    );
+    if (rows.isEmpty) return WeekendPaydayPolicy.previousFriday;
+    return WeekendPaydayPolicy.values.byName(rows.single['value']! as String);
+  }
+
+  Future<void> saveWeekendPaydayPolicy(WeekendPaydayPolicy policy) {
+    return _database.runCustom(
+      'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
+      ['weekend_payday_policy', policy.name],
+    );
   }
 
   Future<GameRun> loadOrCreateDemoRun() async {

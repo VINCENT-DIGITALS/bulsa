@@ -12,6 +12,7 @@ GameRun run({int cash = 500, int savings = 0, bool failed = false}) => GameRun(
   confirmedSalary: 0,
   recurringAllowance: 0,
   debtLimit: -1000,
+  eventSeed: 0,
   completed: !failed,
   failed: failed,
 );

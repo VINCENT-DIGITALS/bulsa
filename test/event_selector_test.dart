@@ -29,4 +29,25 @@ void main() {
     expect(event.isPossibleIncome, isTrue);
     expect(event.choices.map((choice) => choice.amount), contains(2500));
   });
+
+  test('returns the same event sequence for the same seed', () {
+    final first = List.generate(
+      6,
+      (index) => eventForProfileDay(
+        day: index + 1,
+        profile: remoteProfile,
+        seed: 42,
+      ).title,
+    );
+    final second = List.generate(
+      6,
+      (index) => eventForProfileDay(
+        day: index + 1,
+        profile: remoteProfile,
+        seed: 42,
+      ).title,
+    );
+
+    expect(second, first);
+  });
 }

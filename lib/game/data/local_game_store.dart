@@ -50,6 +50,7 @@ class LocalGameStore {
     );
     await _ensureGameRunColumn('debt_limit', 'INTEGER NOT NULL DEFAULT -1000');
     await _ensureGameRunColumn('failed', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureGameRunColumn('event_seed', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureGameRunColumn(
       'recurring_allowance',
       'INTEGER NOT NULL DEFAULT 0',
@@ -191,14 +192,15 @@ class LocalGameStore {
     await _database.runInsert(
       '''INSERT INTO game_runs
         (id, current_day, total_days, start_date, payday_date, cash, savings,
-         confirmed_salary, recurring_allowance, debt_limit, completed, failed)
-        VALUES (1, 1, ?, ?, ?, 5000, 0, ?, ?, -1000, 0, 0)''',
+         confirmed_salary, recurring_allowance, debt_limit, event_seed, completed, failed)
+        VALUES (1, 1, ?, ?, ?, 5000, 0, ?, ?, -1000, ?, 0, 0)''',
       [
         totalDays,
         startDate.toIso8601String(),
         payday.toIso8601String(),
         salary,
         allowance,
+        startDate.millisecondsSinceEpoch.remainder(100000),
       ],
     );
     return _loadRunOrThrow();
@@ -351,6 +353,7 @@ class LocalGameStore {
       confirmedSalary: row['confirmed_salary']! as int,
       recurringAllowance: row['recurring_allowance']! as int,
       debtLimit: row['debt_limit']! as int,
+      eventSeed: row['event_seed']! as int,
       completed: (row['completed']! as int) == 1,
       failed: (row['failed']! as int) == 1,
     );

@@ -189,7 +189,11 @@ class _RunView extends StatelessWidget {
       );
     }
 
-    final event = eventForProfileDay(day: run.currentDay, profile: profile);
+    final event = eventForProfileDay(
+      day: run.currentDay,
+      profile: profile,
+      seed: run.eventSeed,
+    );
     return BulsaPage(
       title: 'Today',
       children: [

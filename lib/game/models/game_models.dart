@@ -9,6 +9,7 @@ class GameRun {
     required this.confirmedSalary,
     required this.recurringAllowance,
     required this.debtLimit,
+    required this.eventSeed,
     required this.completed,
     required this.failed,
   });
@@ -22,6 +23,7 @@ class GameRun {
   final int confirmedSalary;
   final int recurringAllowance;
   final int debtLimit;
+  final int eventSeed;
   final bool completed;
   final bool failed;
 

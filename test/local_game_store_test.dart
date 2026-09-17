@@ -112,4 +112,27 @@ void main() {
     expect(await store.loadConfirmedSalary(), 12000);
     expect(await store.loadRecurringAllowance(), 750);
   });
+
+  test(
+    'persists an optional local profile without changing payday income',
+    () async {
+      const profile = PlayerProfile(
+        displayName: 'Vin',
+        jobTitle: 'Mobile app developer',
+        jobDescription: 'Builds client apps.',
+        companyName: 'Digital Studio',
+        employmentType: EmploymentType.salaried,
+        workTags: {'Remote work'},
+        avatar: ProfileAvatar.triangle,
+      );
+      await store.saveConfirmedSalary(15000);
+      await store.saveProfile(profile);
+
+      final loaded = await store.loadProfile();
+      expect(loaded.displayName, 'Vin');
+      expect(loaded.workTags, {'Remote work'});
+      expect(loaded.avatar, ProfileAvatar.triangle);
+      expect(await store.loadConfirmedSalary(), 15000);
+    },
+  );
 }

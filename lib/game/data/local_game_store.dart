@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bulsa/game/models/game_models.dart';
 import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:drift/drift.dart';
@@ -124,6 +126,47 @@ class LocalGameStore {
     return _database.runCustom(
       'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
       [key, '$amount'],
+    );
+  }
+
+  Future<PlayerProfile> loadProfile() async {
+    final rows = await _database.runSelect(
+      'SELECT value FROM app_settings WHERE key = ?',
+      const ['player_profile'],
+    );
+    if (rows.isEmpty) return const PlayerProfile.empty();
+    final json =
+        jsonDecode(rows.single['value']! as String) as Map<String, dynamic>;
+    return PlayerProfile(
+      displayName: json['displayName'] as String? ?? '',
+      jobTitle: json['jobTitle'] as String? ?? '',
+      jobDescription: json['jobDescription'] as String? ?? '',
+      companyName: json['companyName'] as String? ?? '',
+      employmentType: EmploymentType.values.byName(
+        json['employmentType'] as String? ?? EmploymentType.salaried.name,
+      ),
+      workTags: Set<String>.from(
+        json['workTags'] as List<dynamic>? ?? const [],
+      ),
+      avatar: ProfileAvatar.values.byName(
+        json['avatar'] as String? ?? ProfileAvatar.circle.name,
+      ),
+    );
+  }
+
+  Future<void> saveProfile(PlayerProfile profile) {
+    final encoded = jsonEncode({
+      'displayName': profile.displayName.trim(),
+      'jobTitle': profile.jobTitle.trim(),
+      'jobDescription': profile.jobDescription.trim(),
+      'companyName': profile.companyName.trim(),
+      'employmentType': profile.employmentType.name,
+      'workTags': profile.workTags.toList()..sort(),
+      'avatar': profile.avatar.name,
+    });
+    return _database.runCustom(
+      'INSERT OR REPLACE INTO app_settings (key, value) VALUES (?, ?)',
+      ['player_profile', encoded],
     );
   }
 

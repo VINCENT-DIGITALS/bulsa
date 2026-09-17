@@ -9,9 +9,9 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 ## Current status
 
-**Active phase: Phase 3 — Profiles and variable income.** Phase 2's configurable 15th/month-end pay cycle is persisted locally and verified by calendar, storage, and Android checks.
+**Active phase: Phase 4 — Game depth and balance.** Phase 3's local-only work profile and possible-income event rules are persisted and verified.
 
-**Next exact task:** Add a local-only optional profile with display name, job title, company/work tags, and pay setup. Keep all possible project incentives separate from confirmed payday forecasts.
+**Next exact task:** Add fixed bills, a savings withdrawal confirmation, and a debt limit before expanding the event pool. Keep all effects deterministic and ledgered for testability.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -64,12 +64,14 @@ Goal: make the game reflect real-world cutoff patterns.
 
 Goal: personalize scenarios without requiring sensitive data.
 
-- [ ] Local-only optional profile: display name, avatar, job title, work tags, pay setup.
-- [ ] Add possible income: project incentive, freelance opportunity, one-time bonus.
-- [ ] Keep possible income out of confirmed budget forecasts.
-- [ ] Add profile-driven event weighting, such as remote work or commuter events.
+- [x] Local-only optional profile: display name, avatar, job title, work tags, pay setup.
+- [x] Add possible income: project incentive, freelance opportunity, one-time bonus.
+- [x] Keep possible income out of confirmed budget forecasts.
+- [x] Add profile-driven event weighting, such as remote work or commuter events.
 
-**Exit condition:** A player can set up an app-developer profile and encounter a non-guaranteed project incentive.
+**Verification evidence:** Local-store tests persist an app-developer profile and verify it does not alter confirmed payday income. Event-selection tests give the remote-work project-incentive event an additional deterministic slot and verify the incentive is a possible event, not a forecast. `flutter analyze`, all 14 tests, and Android debug APK builds passed. Android emulator validation confirmed the Profile screen's local-only privacy messaging and form layout.
+
+**Exit condition:** A player can set up an app-developer profile and encounter a non-guaranteed project incentive. **Met.**
 
 ## Phase 3.5 — Optional cloud backup, account linking, and notifications
 

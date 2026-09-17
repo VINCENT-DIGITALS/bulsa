@@ -26,6 +26,60 @@ class GameRun {
   DateTime get currentDate => startDate.add(Duration(days: currentDay - 1));
 }
 
+enum EmploymentType { salaried, contractual, freelance, businessOwner, student }
+
+enum ProfileAvatar { circle, square, triangle }
+
+class PlayerProfile {
+  const PlayerProfile({
+    required this.displayName,
+    required this.jobTitle,
+    required this.jobDescription,
+    required this.companyName,
+    required this.employmentType,
+    required this.workTags,
+    required this.avatar,
+  });
+
+  const PlayerProfile.empty()
+    : displayName = '',
+      jobTitle = '',
+      jobDescription = '',
+      companyName = '',
+      employmentType = EmploymentType.salaried,
+      workTags = const {},
+      avatar = ProfileAvatar.circle;
+
+  final String displayName;
+  final String jobTitle;
+  final String jobDescription;
+  final String companyName;
+  final EmploymentType employmentType;
+  final Set<String> workTags;
+  final ProfileAvatar avatar;
+
+  String get greetingName =>
+      displayName.trim().isEmpty ? 'Player' : displayName;
+
+  PlayerProfile copyWith({
+    String? displayName,
+    String? jobTitle,
+    String? jobDescription,
+    String? companyName,
+    EmploymentType? employmentType,
+    Set<String>? workTags,
+    ProfileAvatar? avatar,
+  }) => PlayerProfile(
+    displayName: displayName ?? this.displayName,
+    jobTitle: jobTitle ?? this.jobTitle,
+    jobDescription: jobDescription ?? this.jobDescription,
+    companyName: companyName ?? this.companyName,
+    employmentType: employmentType ?? this.employmentType,
+    workTags: workTags ?? this.workTags,
+    avatar: avatar ?? this.avatar,
+  );
+}
+
 class LedgerEntry {
   const LedgerEntry({
     required this.day,
@@ -60,10 +114,14 @@ class GameEvent {
     required this.title,
     required this.description,
     required this.choices,
+    this.audienceTags = const [],
+    this.isPossibleIncome = false,
   });
 
   final int day;
   final String title;
   final String description;
   final List<GameChoice> choices;
+  final List<String> audienceTags;
+  final bool isPossibleIncome;
 }

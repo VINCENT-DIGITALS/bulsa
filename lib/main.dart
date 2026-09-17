@@ -1,6 +1,7 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/screens/calendar_page.dart';
 import 'package:bulsa/screens/ledger_page.dart';
+import 'package:bulsa/screens/profile_page.dart';
 import 'package:bulsa/screens/today_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
@@ -76,6 +77,7 @@ class _BulsaHomePageState extends State<BulsaHomePage> {
         0 when widget.store != null => TodayPage(store: widget.store!),
         1 when widget.store != null => CalendarPage(store: widget.store!),
         2 when widget.store != null => LedgerPage(store: widget.store!),
+        3 when widget.store != null => ProfilePage(store: widget.store!),
         _ => SafeArea(child: _placeholderPages[_selectedIndex]),
       },
       bottomNavigationBar: NavigationBar(

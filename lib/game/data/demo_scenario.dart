@@ -25,6 +25,7 @@ const demoScenario = <GameEvent>[
         description: 'Packed snack',
       ),
     ],
+    audienceTags: ['Commuter'],
   ),
   GameEvent(
     day: 2,
@@ -105,13 +106,13 @@ const demoScenario = <GameEvent>[
   GameEvent(
     day: 6,
     title: 'Freelance opportunity',
-    description: 'A small bug fix is available after work.',
+    description: 'A small client bug fix may pay if you take it after work.',
     choices: [
       GameChoice(
-        label: 'Accept job +₱500',
+        label: 'Take the bug fix +₱500',
         amount: 500,
         category: 'Income',
-        description: 'Freelance bug fix',
+        description: 'Awarded freelance payment',
       ),
       GameChoice(
         label: 'Rest tonight — ₱0',
@@ -120,6 +121,8 @@ const demoScenario = <GameEvent>[
         description: 'Declined freelance bug fix',
       ),
     ],
+    audienceTags: ['Remote work'],
+    isPossibleIncome: true,
   ),
   GameEvent(
     day: 7,
@@ -139,5 +142,48 @@ const demoScenario = <GameEvent>[
         description: 'Dinner delivery',
       ),
     ],
+  ),
+  GameEvent(
+    day: 8,
+    title: 'Project incentive',
+    description:
+        'Your app release may qualify for a one-off project incentive. It is not guaranteed.',
+    choices: [
+      GameChoice(
+        label: 'Submit release notes +₱2,500',
+        amount: 2500,
+        category: 'Income',
+        description: 'Awarded project incentive',
+      ),
+      GameChoice(
+        label: 'Skip this submission — ₱0',
+        amount: 0,
+        category: 'Income',
+        description: 'Project incentive not pursued',
+      ),
+    ],
+    audienceTags: ['Remote work'],
+    isPossibleIncome: true,
+  ),
+  GameEvent(
+    day: 9,
+    title: 'One-time bonus',
+    description:
+        'Your team may receive a small thank-you bonus this cycle. It is not part of your regular pay.',
+    choices: [
+      GameChoice(
+        label: 'Accept awarded bonus +₱1,500',
+        amount: 1500,
+        category: 'Income',
+        description: 'Awarded one-time bonus',
+      ),
+      GameChoice(
+        label: 'No bonus this cycle — ₱0',
+        amount: 0,
+        category: 'Income',
+        description: 'No one-time bonus awarded',
+      ),
+    ],
+    isPossibleIncome: true,
   ),
 ];

@@ -1,6 +1,6 @@
-import 'package:bulsa/game/data/demo_scenario.dart';
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
+import 'package:bulsa/game/rules/event_selector.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
@@ -16,31 +16,41 @@ class TodayPage extends StatefulWidget {
 }
 
 class _TodayPageState extends State<TodayPage> {
-  late Future<GameRun> _runFuture;
+  late Future<_TodayData> _runFuture;
 
   @override
   void initState() {
     super.initState();
-    _runFuture = widget.store.loadOrCreatePayCycleRun();
+    _runFuture = _loadTodayData();
   }
+
+  Future<_TodayData> _loadTodayData() async => _TodayData(
+    run: await widget.store.loadOrCreatePayCycleRun(),
+    profile: await widget.store.loadProfile(),
+  );
 
   Future<void> _selectChoice(GameChoice choice) async {
     setState(() {
-      _runFuture = widget.store.applyChoice(choice);
+      _runFuture = _applyChoice(choice);
     });
     await _runFuture;
+  }
+
+  Future<_TodayData> _applyChoice(GameChoice choice) async {
+    await widget.store.applyChoice(choice);
+    return _loadTodayData();
   }
 
   Future<void> _restart() async {
     await widget.store.resetPayCycleRun();
     setState(() {
-      _runFuture = widget.store.loadOrCreatePayCycleRun();
+      _runFuture = _loadTodayData();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<GameRun>(
+    return FutureBuilder<_TodayData>(
       future: _runFuture,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -59,7 +69,8 @@ class _TodayPageState extends State<TodayPage> {
           return const _LoadingPage();
         }
         return _RunView(
-          run: snapshot.data!,
+          run: snapshot.data!.run,
+          profile: snapshot.data!.profile,
           onChoice: _selectChoice,
           onRestart: _restart,
         );
@@ -71,11 +82,13 @@ class _TodayPageState extends State<TodayPage> {
 class _RunView extends StatelessWidget {
   const _RunView({
     required this.run,
+    required this.profile,
     required this.onChoice,
     required this.onRestart,
   });
 
   final GameRun run;
+  final PlayerProfile profile;
   final ValueChanged<GameChoice> onChoice;
   final VoidCallback onRestart;
 
@@ -102,7 +115,7 @@ class _RunView extends StatelessWidget {
       );
     }
 
-    final event = demoScenario[(run.currentDay - 1) % demoScenario.length];
+    final event = eventForProfileDay(day: run.currentDay, profile: profile);
     return BulsaPage(
       title: 'Today',
       children: [
@@ -186,7 +199,10 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('DAILY CHOICE', style: Theme.of(context).textTheme.labelSmall),
+            Text(
+              event.isPossibleIncome ? 'POSSIBLE INCOME' : 'DAILY CHOICE',
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
             const SizedBox(height: BulsaSpacing.small),
             Text(event.title, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: BulsaSpacing.small),
@@ -207,6 +223,13 @@ class _EventCard extends StatelessWidget {
       ),
     );
   }
+}
+
+class _TodayData {
+  const _TodayData({required this.run, required this.profile});
+
+  final GameRun run;
+  final PlayerProfile profile;
 }
 
 class _LoadingPage extends StatelessWidget {

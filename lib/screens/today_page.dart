@@ -1,6 +1,7 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
 import 'package:bulsa/game/rules/event_selector.dart';
+import 'package:bulsa/game/rules/fixed_bills.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
@@ -48,6 +49,46 @@ class _TodayPageState extends State<TodayPage> {
     });
   }
 
+  Future<void> _moveToSavings(int amount) async {
+    setState(() => _runFuture = _saveCash(amount));
+    await _runFuture;
+  }
+
+  Future<_TodayData> _saveCash(int amount) async {
+    await widget.store.moveCashToSavings(amount);
+    return _loadTodayData();
+  }
+
+  Future<void> _confirmWithdrawal(int amount) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Withdraw savings?'),
+        content: Text(
+          'Move ${_peso(amount)} from savings back to available cash? This will be recorded in your ledger.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Keep saved'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Withdraw'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    setState(() => _runFuture = _withdraw(amount));
+    await _runFuture;
+  }
+
+  Future<_TodayData> _withdraw(int amount) async {
+    await widget.store.withdrawSavings(amount);
+    return _loadTodayData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<_TodayData>(
@@ -73,6 +114,8 @@ class _TodayPageState extends State<TodayPage> {
           profile: snapshot.data!.profile,
           onChoice: _selectChoice,
           onRestart: _restart,
+          onSave: _moveToSavings,
+          onWithdraw: _confirmWithdrawal,
         );
       },
     );
@@ -85,15 +128,39 @@ class _RunView extends StatelessWidget {
     required this.profile,
     required this.onChoice,
     required this.onRestart,
+    required this.onSave,
+    required this.onWithdraw,
   });
 
   final GameRun run;
   final PlayerProfile profile;
   final ValueChanged<GameChoice> onChoice;
   final VoidCallback onRestart;
+  final ValueChanged<int> onSave;
+  final ValueChanged<int> onWithdraw;
 
   @override
   Widget build(BuildContext context) {
+    if (run.failed) {
+      return BulsaPage(
+        title: 'Pay cycle ended',
+        children: [
+          _MoneySummary(run: run),
+          const SizedBox(height: BulsaSpacing.xLarge),
+          BulsaInfoCard(
+            icon: Icons.warning_amber_outlined,
+            title: 'Debt limit reached',
+            message:
+                'Cash fell below ${_peso(run.debtLimit)}. Review the ledger and try a different plan.',
+          ),
+          const SizedBox(height: BulsaSpacing.large),
+          BulsaPrimaryButton(
+            label: 'Start a new pay cycle',
+            onPressed: onRestart,
+          ),
+        ],
+      );
+    }
     if (run.completed) {
       return BulsaPage(
         title: 'Pay cycle complete',
@@ -130,9 +197,71 @@ class _RunView extends StatelessWidget {
         ),
         const SizedBox(height: BulsaSpacing.medium),
         _MoneySummary(run: run),
+        const SizedBox(height: BulsaSpacing.medium),
+        _MoneyActions(run: run, onSave: onSave, onWithdraw: onWithdraw),
+        const SizedBox(height: BulsaSpacing.medium),
+        _NextBill(run: run),
         const SizedBox(height: BulsaSpacing.xLarge),
         _EventCard(event: event, onChoice: onChoice),
       ],
+    );
+  }
+}
+
+class _MoneyActions extends StatelessWidget {
+  const _MoneyActions({
+    required this.run,
+    required this.onSave,
+    required this.onWithdraw,
+  });
+
+  final GameRun run;
+  final ValueChanged<int> onSave;
+  final ValueChanged<int> onWithdraw;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Expanded(
+        child: OutlinedButton(
+          onPressed: run.cash >= 100 ? () => onSave(100) : null,
+          child: const Text('Save ₱100'),
+        ),
+      ),
+      const SizedBox(width: BulsaSpacing.small),
+      Expanded(
+        child: OutlinedButton(
+          onPressed: run.savings >= 100 ? () => onWithdraw(100) : null,
+          child: const Text('Withdraw ₱100'),
+        ),
+      ),
+    ],
+  );
+}
+
+class _NextBill extends StatelessWidget {
+  const _NextBill({required this.run});
+
+  final GameRun run;
+
+  @override
+  Widget build(BuildContext context) {
+    final upcomingBills = fixedBills
+        .where((bill) => bill.day >= run.currentDay)
+        .toList();
+    final nextBill = upcomingBills.isEmpty ? null : upcomingBills.first;
+    if (nextBill == null) {
+      return const BulsaInfoCard(
+        icon: Icons.receipt_long_outlined,
+        title: 'No more fixed bills this cycle',
+        message: 'Your remaining decisions can focus on payday and savings.',
+      );
+    }
+    return BulsaInfoCard(
+      icon: Icons.receipt_long_outlined,
+      title: 'Next bill: ${nextBill.title} · ${_peso(nextBill.amount)}',
+      message:
+          'Due on game day ${nextBill.day}. It will be recorded automatically.',
     );
   }
 }

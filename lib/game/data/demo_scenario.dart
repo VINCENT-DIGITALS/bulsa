@@ -186,4 +186,30 @@ const demoScenario = <GameEvent>[
     ],
     isPossibleIncome: true,
   ),
+  GameEvent(
+    day: 10,
+    title: 'Phone repair',
+    description:
+        'Your phone screen has started flickering before an important work week.',
+    choices: [
+      GameChoice(
+        label: 'Replace the screen — ₱1,800',
+        amount: -1800,
+        category: 'Emergency',
+        description: 'Phone screen repair',
+      ),
+      GameChoice(
+        label: 'Use a temporary fix — ₱300',
+        amount: -300,
+        category: 'Emergency',
+        description: 'Temporary phone repair',
+      ),
+      GameChoice(
+        label: 'Delay the repair — ₱0',
+        amount: 0,
+        category: 'Emergency',
+        description: 'Phone repair delayed',
+      ),
+    ],
+  ),
 ];

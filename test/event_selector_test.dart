@@ -17,14 +17,14 @@ void main() {
     'gives tagged project-incentive events an additional deterministic slot',
     () {
       expect(
-        eventForProfileDay(day: 11, profile: remoteProfile).title,
+        eventForProfileDay(day: 12, profile: remoteProfile).title,
         'Project incentive',
       );
     },
   );
 
   test('does not treat a possible incentive as a fixed payday forecast', () {
-    final event = eventForProfileDay(day: 11, profile: remoteProfile);
+    final event = eventForProfileDay(day: 12, profile: remoteProfile);
 
     expect(event.isPossibleIncome, isTrue);
     expect(event.choices.map((choice) => choice.amount), contains(2500));
@@ -49,5 +49,17 @@ void main() {
     );
 
     expect(second, first);
+  });
+
+  test('content pack has at least ten varied event cards', () {
+    final titles = List.generate(
+      10,
+      (index) => eventForProfileDay(
+        day: index + 1,
+        profile: const PlayerProfile.empty(),
+      ).title,
+    );
+
+    expect(titles.toSet(), hasLength(10));
   });
 }

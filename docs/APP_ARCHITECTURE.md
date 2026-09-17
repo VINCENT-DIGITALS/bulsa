@@ -36,6 +36,9 @@ lib/
 - **Flame presentation** is decorative only. It reads an already-derived UI
   state, respects reduced motion, uses shared color tokens, and never owns
   choices, forms, dialogs, money, or accessibility-critical text.
+- **Public support configuration** will be read through a repository and cached
+  in Drift/SQLite when the backend phase starts. Views must not embed contact
+  emails or public URLs as string literals.
 
 ## Next evolution, only when complexity needs it
 

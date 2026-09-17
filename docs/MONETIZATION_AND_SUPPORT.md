@@ -54,6 +54,12 @@ Your plan: Free / BULSA Supporter
 Standard support / Priority support
 ```
 
+The public help, privacy, and contact destinations must come from a
+backend-managed configuration when that backend exists. Do not hardcode a
+placeholder email or URL. Until the owner supplies and verifies a real route,
+show that support contact is not yet available; do not falsely present it as a
+working channel.
+
 ### Support request fields
 
 - Topic: Bug, account/cloud sync, billing, feedback, or other.

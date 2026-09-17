@@ -90,6 +90,27 @@ Store only game/profile data. Do not collect real bank accounts, payment cards, 
 - Use **FCM** for remote messages such as a new-season announcement, an optional campaign notification, or a cross-device sync prompt. FCM itself is no-cost.
 - Do not put a Firebase server credential in the Flutter app. Sending FCM messages programmatically requires a trusted server environment. Until a secure server/budget exists, send campaign notifications manually through Firebase Console or keep notifications local.
 
+## Public support configuration: backend-managed later
+
+Do not hardcode a support email address, contact URL, privacy-policy URL, or
+help-centre URL into widgets. Those are public operational details that can
+change after release.
+
+When the optional backend phase begins, expose a small public, read-only
+configuration document such as `appConfig/publicSupport`. It may contain only:
+
+- `contactEmail`
+- `contactUrl`
+- `privacyPolicyUrl`
+- `helpCenterUrl`
+- `updatedAt`
+
+The app caches the last valid configuration in Drift/SQLite for offline display.
+Only a trusted server/admin workflow may write that document; client apps must
+never have public write permission. Until an owner provides and verifies at
+least one real contact route and the hosted privacy-policy URL, the app must
+show no invented contact destination and cannot pass the public-release gate.
+
 ## Security checklist
 
 - Write and test Firebase Security Rules before any mobile app release.

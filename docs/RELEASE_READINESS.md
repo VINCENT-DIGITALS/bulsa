@@ -32,6 +32,7 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 ### Gate A — Complete player journey
 
 - [x] A first-time player can understand the purpose and start a run without guidance from the developer. A local three-step onboarding screen explains the cycle, choices, and ledger, then directs the player to Calendar setup; clean-install Android visual QA passed.
+- [x] A local Help & privacy route is visible from Profile. It explains the offline game, local storage, and that no public support or privacy-policy destination exists until the owner verifies one; it contains no fake email or URL.
 - [ ] The player can create/edit a local profile and pay schedule.
 - [ ] The game shows current date, cash, savings, next bill, next payday, and payday status.
 - [ ] Each choice creates exactly one understandable financial/ledger outcome.
@@ -71,7 +72,7 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 - [ ] Signed Android App Bundle (`.aab`), not only a debug APK, is built and installed/tested.
 - [ ] Release keystore is privately backed up and never committed to Git.
 - [ ] App icon, feature graphic, screenshots, short description, full description, category, contact email, and content rating are ready.
-- [ ] Privacy policy is published and accurately describes local storage, Firebase Core configuration, and any data collection.
+- [ ] Privacy policy is published and accurately describes local storage, Firebase Core configuration, and any data collection. Its public URL, plus contact details, must be supplied through verified release-owner/backend configuration rather than hardcoded placeholders.
 - [ ] Google Play Data safety form accurately matches the final app behaviour.
 - [ ] Closed test track passes before production submission.
 

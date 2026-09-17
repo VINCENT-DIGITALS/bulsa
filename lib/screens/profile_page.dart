@@ -1,5 +1,6 @@
 import 'package:bulsa/game/data/local_game_store.dart';
 import 'package:bulsa/game/models/game_models.dart';
+import 'package:bulsa/screens/help_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
@@ -183,6 +184,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: BulsaSpacing.xLarge),
             BulsaPrimaryButton(label: 'Save profile', onPressed: _save),
+            const SizedBox(height: BulsaSpacing.medium),
+            BulsaSecondaryButton(
+              label: 'Help, privacy, and support',
+              icon: Icons.help_outline,
+              onPressed: () => Navigator.of(
+                context,
+              ).push(MaterialPageRoute<void>(builder: (_) => const HelpPage())),
+            ),
             const SizedBox(height: BulsaSpacing.medium),
             Text(
               'Paydays and confirmed income are configured in Calendar. Project incentives and bonuses stay possible income until a game event awards them.',

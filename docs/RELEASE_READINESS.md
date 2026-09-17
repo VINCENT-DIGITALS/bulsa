@@ -70,7 +70,7 @@ These are a **v1.1 Supporter release**, not a reason to delay the free game. Fir
 - [x] `targetSdk` meets the Google Play requirement at submission time: `targetSdk = 36` is configured and verified on 17 September 2026. Google Play requires new mobile submissions to target Android 16 / API 36 or higher from 31 August 2026; re-check immediately before upload. ([Official requirement](https://support.google.com/googleplay/android-developer/answer/11926878?hl=en-AU))
 - [x] Version name/code are set for the release: `1.0.0+1` in `pubspec.yaml`. Increment the build number before every later Play upload.
 - [ ] Signed Android App Bundle (`.aab`), not only a debug APK, is built and installed/tested.
-- [ ] Release keystore is privately backed up and never committed to Git.
+- [ ] Release keystore is privately backed up and never committed to Git. The build is fail-closed: `android/key.properties.example` documents the owner setup and release mode refuses to fall back to a debug key.
 - [ ] App icon, feature graphic, screenshots, short description, full description, category, contact email, and content rating are ready.
 - [ ] Privacy policy is published and accurately describes local storage, Firebase Core configuration, and any data collection. Its public URL, plus contact details, must be supplied through verified release-owner/backend configuration rather than hardcoded placeholders.
 - [ ] Google Play Data safety form accurately matches the final app behaviour.

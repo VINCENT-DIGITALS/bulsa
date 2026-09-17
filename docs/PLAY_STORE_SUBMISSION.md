@@ -68,3 +68,14 @@ flutter build appbundle --release
 
 The release bundle must use the owner’s upload-key signing configuration. Do
 not submit a debug-signed bundle.
+
+### Android signing setup
+
+1. Create the private upload keystore outside the repository and back it up.
+2. Copy `android/key.properties.example` to `android/key.properties`.
+3. Replace every `REPLACE_...` value with the private keystore details.
+4. Run `flutter build appbundle --release`.
+
+`key.properties` and keystore files are ignored by Git. A release build now
+fails fast if this owner-only configuration is absent, rather than silently
+falling back to a debug key.

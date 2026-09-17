@@ -11,7 +11,7 @@ This is the delivery order and continuation log. Finish and verify a phase befor
 
 **Active phase: Phase 4 — Game depth and balance.** Phase 3's local-only work profile and possible-income event rules are persisted and verified.
 
-**Next exact task:** Add fixed bills, a savings withdrawal confirmation, and a debt limit before expanding the event pool. Keep all effects deterministic and ledgered for testability.
+**Next exact task:** Run the five-person external playtest in [External Playtest Protocol](EXTERNAL_PLAYTEST.md), triage launch-blocking findings, and retest fixes. Phase 5 cannot start until Gate D has evidence.
 
 When work stops, update this file with: current phase, completed items, next exact task, and any blocker.
 
@@ -92,11 +92,13 @@ Goal: protect player progress without blocking offline play.
 
 Goal: make replaying interesting and fair.
 
-- [ ] Add 8–10 varied event cards.
-- [ ] Add fixed bills, savings withdrawal confirmation, and debt limit.
-- [ ] Use seedable random events for repeatable testing.
-- [ ] Tune win/lose scoring and a month/pay-cycle result screen.
-- [ ] Add one financial lesson per completed run.
+- [x] Add 8–10 varied event cards.
+- [x] Add fixed bills, savings withdrawal confirmation, and debt limit.
+- [x] Use seedable random events for repeatable testing.
+- [x] Tune win/lose scoring and a month/pay-cycle result screen.
+- [x] Add one financial lesson per completed run.
+
+**Verification evidence:** The deterministic pack contains ten event cards. Unit tests cover fixed-bill charges, savings movement, debt-limit failure, outcome scoring, and seeded event sequences. `flutter analyze`, 21 tests, and Android debug APK builds passed; Android emulator checks verified the bill/savings layout and withdrawal safeguard.
 
 **Exit condition:** Different choices produce meaningfully different outcomes without unavoidable losses, and Gate D external-player validation passes.
 

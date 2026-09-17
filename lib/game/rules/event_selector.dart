@@ -7,10 +7,11 @@ import 'package:bulsa/game/models/game_models.dart';
 GameEvent eventForProfileDay({
   required int day,
   required PlayerProfile profile,
+  int seed = 0,
 }) {
   final relevant = demoScenario
       .where((event) => event.audienceTags.any(profile.workTags.contains))
       .toList();
   final weightedPool = [...demoScenario, ...relevant];
-  return weightedPool[(day - 1) % weightedPool.length];
+  return weightedPool[(seed + day - 1) % weightedPool.length];
 }

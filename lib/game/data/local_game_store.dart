@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:bulsa/game/models/game_models.dart';
 import 'package:bulsa/game/rules/pay_schedule.dart';
+import 'package:bulsa/game/rules/fixed_bills.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 
@@ -47,6 +48,9 @@ class LocalGameStore {
       'confirmed_salary',
       'INTEGER NOT NULL DEFAULT 0',
     );
+    await _ensureGameRunColumn('debt_limit', 'INTEGER NOT NULL DEFAULT -1000');
+    await _ensureGameRunColumn('failed', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureGameRunColumn('event_seed', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureGameRunColumn(
       'recurring_allowance',
       'INTEGER NOT NULL DEFAULT 0',
@@ -188,14 +192,15 @@ class LocalGameStore {
     await _database.runInsert(
       '''INSERT INTO game_runs
         (id, current_day, total_days, start_date, payday_date, cash, savings,
-         confirmed_salary, recurring_allowance, completed)
-        VALUES (1, 1, ?, ?, ?, 5000, 0, ?, ?, 0)''',
+         confirmed_salary, recurring_allowance, debt_limit, event_seed, completed, failed)
+        VALUES (1, 1, ?, ?, ?, 5000, 0, ?, ?, -1000, ?, 0, 0)''',
       [
         totalDays,
         startDate.toIso8601String(),
         payday.toIso8601String(),
         salary,
         allowance,
+        startDate.millisecondsSinceEpoch.remainder(100000),
       ],
     );
     return _loadRunOrThrow();
@@ -205,8 +210,8 @@ class LocalGameStore {
 
   Future<GameRun> applyChoice(GameChoice choice) async {
     final run = await _loadRunOrThrow();
-    if (run.completed) {
-      throw StateError('This pay cycle is already complete.');
+    if (run.isClosed) {
+      throw StateError('This pay cycle is already closed.');
     }
 
     final nextDay = run.currentDay + 1;
@@ -214,6 +219,10 @@ class LocalGameStore {
     final paydayIncome = completed
         ? run.confirmedSalary + run.recurringAllowance
         : 0;
+    final dueBills = billsDueOn(run.currentDay);
+    final billTotal = dueBills.fold(0, (total, bill) => total + bill.amount);
+    final resultingCash = run.cash + choice.amount + paydayIncome - billTotal;
+    final failed = resultingCash < run.debtLimit;
     final transaction = _database.beginTransaction();
     try {
       await transaction.ensureOpen(const _StoreExecutorUser());
@@ -221,6 +230,12 @@ class LocalGameStore {
         'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
         [run.currentDay, choice.amount, choice.category, choice.description],
       );
+      for (final bill in dueBills) {
+        await transaction.runInsert(
+          'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
+          [run.currentDay, -bill.amount, 'Bills', '${bill.title} paid'],
+        );
+      }
       if (completed && run.confirmedSalary > 0) {
         await transaction.runInsert(
           'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
@@ -239,8 +254,8 @@ class LocalGameStore {
         );
       }
       await transaction.runUpdate(
-        'UPDATE game_runs SET cash = ?, current_day = ?, completed = ? WHERE id = 1',
-        [run.cash + choice.amount + paydayIncome, nextDay, completed ? 1 : 0],
+        'UPDATE game_runs SET cash = ?, current_day = ?, completed = ?, failed = ? WHERE id = 1',
+        [resultingCash, nextDay, completed ? 1 : 0, failed ? 1 : 0],
       );
       await transaction.send();
     } catch (_) {
@@ -265,6 +280,45 @@ class LocalGameStore {
           ),
         )
         .toList();
+  }
+
+  Future<GameRun> moveCashToSavings(int amount) => _moveSavings(amount, true);
+
+  Future<GameRun> withdrawSavings(int amount) => _moveSavings(amount, false);
+
+  Future<GameRun> _moveSavings(int amount, bool toSavings) async {
+    if (amount <= 0) {
+      throw ArgumentError.value(amount, 'amount');
+    }
+    final run = await _loadRunOrThrow();
+    final available = toSavings ? run.cash : run.savings;
+    if (amount > available) {
+      throw StateError('Not enough ${toSavings ? 'cash' : 'savings'}.');
+    }
+    final cashChange = toSavings ? -amount : amount;
+    final savingsChange = toSavings ? amount : -amount;
+    final transaction = _database.beginTransaction();
+    try {
+      await transaction.ensureOpen(const _StoreExecutorUser());
+      await transaction.runInsert(
+        'INSERT INTO ledger_entries (day, amount, category, description) VALUES (?, ?, ?, ?)',
+        [
+          run.currentDay,
+          cashChange,
+          'Savings',
+          toSavings ? 'Moved to savings' : 'Withdrew from savings',
+        ],
+      );
+      await transaction.runUpdate(
+        'UPDATE game_runs SET cash = ?, savings = ? WHERE id = 1',
+        [run.cash + cashChange, run.savings + savingsChange],
+      );
+      await transaction.send();
+    } catch (_) {
+      await transaction.rollback();
+      rethrow;
+    }
+    return _loadRunOrThrow();
   }
 
   Future<void> resetPayCycleRun() async {
@@ -298,7 +352,10 @@ class LocalGameStore {
       savings: row['savings']! as int,
       confirmedSalary: row['confirmed_salary']! as int,
       recurringAllowance: row['recurring_allowance']! as int,
+      debtLimit: row['debt_limit']! as int,
+      eventSeed: row['event_seed']! as int,
       completed: (row['completed']! as int) == 1,
+      failed: (row['failed']! as int) == 1,
     );
   }
 

@@ -51,7 +51,9 @@ class _CalendarPageState extends State<CalendarPage> {
     if (selected != null) {
       await widget.store.saveRunStartDate(selected);
       if (mounted) {
-        setState(() => _settingsFuture = _loadSettings());
+        setState(() {
+          _settingsFuture = _loadSettings();
+        });
       }
     }
   }

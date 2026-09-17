@@ -3,6 +3,7 @@ import 'package:bulsa/game/rules/pay_schedule.dart';
 import 'package:bulsa/main.dart';
 import 'package:bulsa/screens/calendar_page.dart';
 import 'package:bulsa/screens/profile_page.dart';
+import 'package:bulsa/screens/today_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -80,6 +81,42 @@ void main() {
 
     expect(await store.loadConfirmedSalary(), 15000);
     expect(await store.loadRecurringAllowance(), 1000);
+  });
+
+  testWidgets('moves cash to savings and confirms a withdrawal from Today', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(800, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await store.saveRunStartDate(DateTime(2026, 9, 14));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildBulsaTheme(),
+        home: Scaffold(body: TodayPage(store: store)),
+      ),
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+
+    await tester.tap(find.text('Save ₱100'));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+    var run = await store.loadPayCycleRun();
+    expect(run!.cash, 4900);
+    expect(run.savings, 100);
+
+    await tester.tap(find.text('Withdraw ₱100'));
+    await tester.pump();
+    expect(find.text('Withdraw savings?'), findsOneWidget);
+    await tester.tap(find.text('Withdraw'));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump();
+    run = await store.loadPayCycleRun();
+    expect(run!.cash, 5000);
+    expect(run.savings, 0);
   });
 
   testWidgets('plays and persists a complete configured pay cycle', (

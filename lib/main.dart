@@ -56,7 +56,9 @@ class _BulsaAppEntryState extends State<_BulsaAppEntry> {
   }
 
   void _completeOnboarding() {
-    setState(() => _onboardingFuture = Future.value(true));
+    setState(() {
+      _onboardingFuture = Future.value(true);
+    });
   }
 
   @override

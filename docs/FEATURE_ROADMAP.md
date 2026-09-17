@@ -41,7 +41,7 @@ Goal: prove the core choice loop in a short hard-coded run.
 
 **Verification evidence:** Local-store unit tests cover creating/persisting a run, recording a choice, and completing Day 7. Android emulator verification showed Day 1 → Day 2 with cash changing from ₱5,000 to ₱4,880, retained after an app restart; the Ledger tab displayed the recorded −₱120 entry.
 
-**Release-hardening evidence:** Widget tests now save an optional local profile, save Calendar policy/income settings, play a configured two-day cycle through the visible Today choices, render its result screen, and reload the completed run and ledger. Store tests exercise legacy-schema upgrade, calendar settings, bills, savings transfers, payroll, failure, and ledger reconciliation. This work also fixed three asynchronous `setState` defects in profile and Calendar saving flows.
+**Release-hardening evidence:** Widget tests now save an optional local profile, save Calendar policy/income settings, move cash to and from savings through the confirmation flow, play a configured two-day cycle through the visible Today choices, render its result screen, and reload the completed run and ledger. Store tests exercise legacy-schema upgrade, calendar settings, bills, savings transfers, payroll, failure, and ledger reconciliation. The UI audit also fixed every asynchronous `setState` defect found in onboarding, profile, Calendar, and Today money-saving flows.
 
 **Exit condition:** A player can complete a 7-day run in under five minutes, understands why cash changed, and Gate A/B persistence/ledger checks pass.
 

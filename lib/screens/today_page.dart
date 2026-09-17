@@ -52,7 +52,9 @@ class _TodayPageState extends State<TodayPage> {
   }
 
   Future<void> _moveToSavings(int amount) async {
-    setState(() => _runFuture = _saveCash(amount));
+    setState(() {
+      _runFuture = _saveCash(amount);
+    });
     await _runFuture;
   }
 
@@ -82,7 +84,9 @@ class _TodayPageState extends State<TodayPage> {
       ),
     );
     if (confirmed != true) return;
-    setState(() => _runFuture = _withdraw(amount));
+    setState(() {
+      _runFuture = _withdraw(amount);
+    });
     await _runFuture;
   }
 

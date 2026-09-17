@@ -6,6 +6,15 @@ This is the visual source of truth for BULSA. Follow it for every new screen, wi
 
 **Quiet, warm, and trustworthy.** BULSA should feel like a helpful personal game companion—not a bank portal, a neon arcade game, or a crowded financial dashboard.
 
+## Native logo and splash
+
+The native BULSA mark is a dark wallet with a warm primary inner panel and a
+light coin detail. It is defined once as the Android vector
+`@drawable/bulsa_logo_mark`, then reused for the launcher and splash screen.
+The native splash uses `background` (`#F8F8F8`) with the centered mark on every
+supported Android version. Do not introduce a separate logo palette, gradient,
+or one-off splash background.
+
 ## Core color tokens
 
 | Token | Hex | Use |
@@ -82,6 +91,19 @@ app feel like a dense finance dashboard.
 - Use the shared `BulsaPrimaryButton`, `BulsaSecondaryButton`, and
   `BulsaButtonRow` widgets. Buttons are 52 pixels high, exceeding the
   48-pixel minimum touch target.
+
+### Elevation, selection, and navigation
+
+- Use the shared `BulsaShadows.card` and `BulsaShadows.navigation` tokens;
+  never add a one-off shadow to a screen.
+- Cards stay white with a light border and restrained shadow. The shadow gives
+  hierarchy, not decoration.
+- Selection lists use the shared modal bottom sheet, with a drag handle and a
+  24-pixel exposed-top radius. Do not use a compact dropdown menu for form
+  choices on mobile.
+- The bottom navigation is a calm persistent surface with an outlined top
+  separation/shadow, 72-pixel height, readable labels, and the primary selected
+  indicator.
 
 ### Semantic spacing tokens
 

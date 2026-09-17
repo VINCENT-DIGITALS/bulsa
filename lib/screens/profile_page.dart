@@ -4,6 +4,7 @@ import 'package:bulsa/screens/help_page.dart';
 import 'package:bulsa/theme/bulsa_theme.dart';
 import 'package:bulsa/widgets/bulsa_button.dart';
 import 'package:bulsa/widgets/bulsa_page.dart';
+import 'package:bulsa/widgets/bulsa_selection_sheet.dart';
 import 'package:flutter/material.dart';
 
 const _workTags = ['Remote work', 'Commuter', 'Supports family'];
@@ -146,19 +147,21 @@ class _ProfilePageState extends State<ProfilePage> {
               style: Theme.of(context).textTheme.labelSmall,
             ),
             const SizedBox(height: BulsaSpacing.small),
-            DropdownButtonFormField<EmploymentType>(
-              initialValue: _employmentType,
-              decoration: const InputDecoration(),
-              items: EmploymentType.values
-                  .map(
-                    (type) => DropdownMenuItem(
-                      value: type,
-                      child: Text(_employmentLabel(type)),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (type) =>
-                  setState(() => _employmentType = type ?? _employmentType),
+            BulsaSelectionField(
+              label: 'Employment type',
+              value: _employmentLabel(_employmentType),
+              onPressed: () async {
+                final selected = await showBulsaSelectionSheet(
+                  context: context,
+                  title: 'Employment type',
+                  selected: _employmentType,
+                  options: EmploymentType.values,
+                  label: _employmentLabel,
+                );
+                if (selected != null && mounted) {
+                  setState(() => _employmentType = selected);
+                }
+              },
             ),
             const SizedBox(height: BulsaSpacing.xLarge),
             Text('WORK TAGS', style: Theme.of(context).textTheme.labelSmall),

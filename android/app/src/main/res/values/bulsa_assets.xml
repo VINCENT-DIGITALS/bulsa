@@ -1,0 +1,4 @@
+<resources>
+    <color name="bulsa_background">#F8F8F8</color>
+    <item name="ic_launcher" type="drawable">@drawable/bulsa_logo_mark</item>
+</resources>

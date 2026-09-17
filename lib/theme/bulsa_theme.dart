@@ -14,6 +14,16 @@ abstract final class BulsaRadii {
   static const modal = Radius.circular(24);
 }
 
+abstract final class BulsaShadows {
+  static const card = [
+    BoxShadow(color: Color(0x142F2F32), blurRadius: 16, offset: Offset(0, 6)),
+  ];
+
+  static const navigation = [
+    BoxShadow(color: Color(0x102F2F32), blurRadius: 18, offset: Offset(0, -4)),
+  ];
+}
+
 abstract final class BulsaSpacing {
   static const xSmall = 4.0;
   static const small = 8.0;
@@ -95,7 +105,8 @@ ThemeData buildBulsaTheme() {
     ),
     cardTheme: CardThemeData(
       color: Colors.white,
-      elevation: 0,
+      elevation: 2,
+      shadowColor: BulsaColors.black.withValues(alpha: .08),
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: const BorderRadius.all(BulsaRadii.container),
@@ -148,7 +159,9 @@ ThemeData buildBulsaTheme() {
     ),
     navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: BulsaColors.background,
+      height: 72,
       indicatorColor: BulsaColors.primary,
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       labelTextStyle: WidgetStatePropertyAll(
         TextStyle(color: BulsaColors.black, fontWeight: FontWeight.w700),
       ),

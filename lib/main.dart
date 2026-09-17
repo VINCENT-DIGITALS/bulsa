@@ -131,28 +131,34 @@ class _BulsaHomePageState extends State<BulsaHomePage> {
         3 when widget.store != null => ProfilePage(store: widget.store!),
         _ => SafeArea(child: _placeholderPages[_selectedIndex]),
       },
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: (index) =>
-            setState(() => _selectedIndex = index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.today_outlined),
-            label: 'Today',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            label: 'Calendar',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.receipt_long_outlined),
-            label: 'Ledger',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            label: 'Profile',
-          ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: BulsaColors.background,
+          boxShadow: BulsaShadows.navigation,
+        ),
+        child: NavigationBar(
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: (index) =>
+              setState(() => _selectedIndex = index),
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.today_outlined),
+              label: 'Today',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.calendar_month_outlined),
+              label: 'Calendar',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.receipt_long_outlined),
+              label: 'Ledger',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -8,7 +8,9 @@ class GameRun {
     required this.savings,
     required this.confirmedSalary,
     required this.recurringAllowance,
+    required this.debtLimit,
     required this.completed,
+    required this.failed,
   });
 
   final int currentDay;
@@ -19,11 +21,27 @@ class GameRun {
   final int savings;
   final int confirmedSalary;
   final int recurringAllowance;
+  final int debtLimit;
   final bool completed;
+  final bool failed;
 
   int get daysRemaining => completed ? 0 : totalDays - currentDay + 1;
 
   DateTime get currentDate => startDate.add(Duration(days: currentDay - 1));
+
+  bool get isClosed => completed || failed;
+}
+
+class FixedBill {
+  const FixedBill({
+    required this.day,
+    required this.title,
+    required this.amount,
+  });
+
+  final int day;
+  final String title;
+  final int amount;
 }
 
 enum EmploymentType { salaried, contractual, freelance, businessOwner, student }

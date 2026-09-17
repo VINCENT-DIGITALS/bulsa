@@ -135,4 +135,55 @@ void main() {
       expect(await store.loadConfirmedSalary(), 15000);
     },
   );
+
+  test(
+    'charges a fixed bill and writes it to the ledger on its due day',
+    () async {
+      await store.saveRunStartDate(DateTime(2026, 9, 13));
+      await store.loadOrCreatePayCycleRun();
+      const noSpend = GameChoice(
+        label: 'No spend',
+        amount: 0,
+        category: 'Test',
+        description: 'Test choice',
+      );
+      await store.applyChoice(noSpend);
+      await store.applyChoice(noSpend);
+      final updated = await store.applyChoice(noSpend);
+
+      expect(updated.cash, 4701);
+      expect(
+        (await store.loadLedger()).map((entry) => entry.description),
+        contains('Mobile data paid'),
+      );
+    },
+  );
+
+  test('moves money to and from savings with ledger entries', () async {
+    await store.loadOrCreatePayCycleRun();
+    await store.moveCashToSavings(500);
+    final updated = await store.withdrawSavings(200);
+
+    expect(updated.cash, 4700);
+    expect(updated.savings, 300);
+    expect((await store.loadLedger()).map((entry) => entry.amount), [
+      -500,
+      200,
+    ]);
+  });
+
+  test('closes a run that crosses its configured debt limit', () async {
+    await store.loadOrCreatePayCycleRun();
+    final updated = await store.applyChoice(
+      const GameChoice(
+        label: 'Emergency',
+        amount: -6001,
+        category: 'Test',
+        description: 'Emergency cost',
+      ),
+    );
+
+    expect(updated.failed, isTrue);
+    expect(updated.isClosed, isTrue);
+  });
 }
